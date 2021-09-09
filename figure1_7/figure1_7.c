@@ -2,26 +2,36 @@
 // Sep 07 2021
 // Figure 1.7 in the textbook
 
+#define _OPEN_THREADS
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <pthread.h>
-
-
 
 int *A;
 int COUNT = 0;
 int SEGSIZE;
 int NUMOFTHREADS;
 
-void count3s(int index)
+void *count3s(int index)
 {
-        printf("%d\n", index);
+	// printf("I ran once %d\n", index);
 	int mystart = index * SEGSIZE;
 	int myend = mystart + SEGSIZE;
 
+	// for (int i = mystart; i < myend; i++) {
+	// 	if (A[i] == 3) {
+	// 		COUNT++;
+	// 	}
+	// }
+
+	// printf("start is %d\n", mystart);
+	// printf("end is %d\n", myend);
+	// printf("WHAT!!!!!! \n");
 	for (int i = mystart; i < myend; i++) {
 		if (A[i] == 3) {
+			// printf("Oh found one\n");
 			COUNT++;
 		}
 	}
@@ -29,10 +39,13 @@ void count3s(int index)
 
 void count3s_parallel()
 {
+        int jared;
 	pthread_t my_t_connector;
 	for (int i = 0; i < NUMOFTHREADS; i++) {
-		count3s(i);
-		pthread_create(&my_t_connector, NULL, count3s, i);
+		// count3s(i);
+		printf("WHAT WHO\n");
+		jared = pthread_create(&my_t_connector, NULL, count3s, 0);
+                pthread_join(my_t_connector, NULL);
 	}
 }
 
@@ -64,8 +77,10 @@ int main(int argc, char const *argv[])
 	NUMOFTHREADS = atoi(argv[2]);
 	SEGSIZE = size / NUMOFTHREADS;
 
-	// printf("number is %s \n", argv[1]);
-	// printf("number is %d \n", SIZE);
+	printf("number is %s \n", argv[1]);
+	printf("number is %d \n", size);
+	printf("NumThr is %d \n", NUMOFTHREADS);
+	printf("Seg Si is %d \n", SEGSIZE);
 
 	A = (int *)(malloc(sizeof(int) * size));
 
@@ -75,7 +90,8 @@ int main(int argc, char const *argv[])
 
 	for (int i = 0; i < size; i++) {
 		A[i] = rand() % 4;
-		// printf("%d \n", A[i]);
+
+		// printf("E%d \n", A[i]);
 	}
 
 	// do the work parallel
@@ -89,8 +105,9 @@ int main(int argc, char const *argv[])
 	// do the work serial
 	int local_count = 0;
 	for (int i = 0; i < size; i++) {
-		if (A[i] == 3)
+		if (A[i] == 3) {
 			local_count++;
+		}
 	}
 
 	printf("parallel count is %d\n", COUNT);
@@ -98,4 +115,3 @@ int main(int argc, char const *argv[])
 
 	return 0;
 }
-
