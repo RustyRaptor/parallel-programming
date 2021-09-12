@@ -2,7 +2,7 @@
 // Sep 07 2021
 // Figure 1.7 in the textbook
 
-#define _OPEN_THREADS
+#define DEBUG 1
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,9 +14,10 @@ int COUNT = 0;
 int SEGSIZE;
 int NUMOFTHREADS;
 
-void *count3s(int index)
+void * count3s(int index)
 {
-	// printf("I ran once %d\n", index);
+	if (DEBUG)
+		printf("I ran once %d\n", index);
 	int mystart = index * SEGSIZE;
 	int myend = mystart + SEGSIZE;
 
@@ -26,26 +27,31 @@ void *count3s(int index)
 	// 	}
 	// }
 
-	// printf("start is %d\n", mystart);
-	// printf("end is %d\n", myend);
-	// printf("WHAT!!!!!! \n");
+	if (DEBUG) {
+		printf("start is %d\n", mystart);
+		printf("end is %d\n", myend);
+	}
+
 	for (int i = mystart; i < myend; i++) {
 		if (A[i] == 3) {
-			// printf("Oh found one\n");
+			if (DEBUG)
+				printf("Found a three\n");
 			COUNT++;
 		}
 	}
+
+        return (void *) 0;
 }
 
 void count3s_parallel()
 {
-        int jared;
+	int jared;
 	pthread_t my_t_connector;
 	for (int i = 0; i < NUMOFTHREADS; i++) {
 		// count3s(i);
 		printf("WHAT WHO\n");
 		jared = pthread_create(&my_t_connector, NULL, count3s, 0);
-                pthread_join(my_t_connector, NULL);
+		pthread_join(my_t_connector, NULL);
 	}
 }
 
