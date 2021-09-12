@@ -2,7 +2,15 @@
 // Created: Aug 31 2021
 // Figure 1.7 in the textbook
 
-/*
+/**
+ * @brief This program will create an array of a specified size and fill it
+ * with random numbers between 1 and 3 inclusive. It will then try to count
+ * the number of threes in the array using a serial method and a parallel method
+ * it will return the counts for each attempt as well as the running times. 
+ * 
+ */
+
+/**
 Changelog
 08/31
 - added argument handling
@@ -25,42 +33,52 @@ Changelog
 -
 
 
-*/
+**/
 
-#define DEBUG 1
+#define DEBUG 0 // flag to print debug values
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <pthread.h>
 
-int *A;
-int COUNT = 0;
-int SEGSIZE;
-int NUMOFTHREADS;
+int *A; // Pointer to our array in heap
+int COUNT = 0; // The count of threes we found for the parallel code
+int SEGSIZE; // the size of each chunk per tread
+int NUMOFTHREADS; // the number of threads to spawn
 
+/**
+ * @brief Iterates through a chunk of the A array and counts the number of 
+ * threes by updating the COUNT variable
+ * 
+ * 
+ * @param index The index of the array chunks re are working with
+ * @return void* returns a void pointer to work with pthread
+ * 
+ * @pre The global A variable must be a pointer to an array in heap containing numbers between 
+ * 1 and 3. index must be a number referring to the index of the chunk we want
+ * to work through starting at 0. The global COUNT variable must contain the
+ * number of threes we have already counted
+ * 
+ * @post When done the COUNT variable must be updated to have the number of 
+ * threes found in our chunk of the array
+ */
 void *count3s(int index)
 {
-        if (DEBUG)
-                printf("I ran once %d\n", index);
+        // if (DEBUG)
+        //         printf("I ran once %d\n", index);
         int mystart = index * SEGSIZE;
         int myend = mystart + SEGSIZE;
 
-        // for (int i = mystart; i < myend; i++) {
-        // 	if (A[i] == 3) {
-        // 		COUNT++;
-        // 	}
+        // if (DEBUG) {
+                // printf("start is %d\n", mystart);
+                // printf("end is   %d\n", myend);
         // }
-
-        if (DEBUG) {
-                printf("start is %d\n", mystart);
-                printf("end is %d\n", myend);
-        }
 
         for (int i = mystart; i < myend; i++) {
                 if (A[i] == 3) {
-                        if (DEBUG)
-                                printf("Found a three\n");
+                        // if (DEBUG)
+                        //         printf("Found a three\n");
                         COUNT++;
                 }
         }
@@ -68,16 +86,53 @@ void *count3s(int index)
         return (void *)0;
 }
 
-void count3s_parallel()
+/**
+ * @brief This function is used to spawn the appropriate number of threads
+ * 
+ * @return int containing the time it took
+ * 
+ * @pre The global COUNT variable is 0. NUMOFTHREADS is greater than 0.
+ * SEGSIZE is the size of the array divided by NUMOFTHREADS. the A variable
+ * points to an array in heap. 
+ * 
+ * @post The global COUNT contains the correct three count
+ * 
+ */
+int count3s_parallel()
 {
-        int jared;
-        pthread_t my_t_connector;
+        // initialize the timer for the parallel work
+        struct timespec starttime, endtime;
+        int j, k;
+        
+        
+        clock_gettime(CLOCK_REALTIME, &starttime); // start the timer
+
+        // Created an array allocated at runtime to hold the identifiers for
+        // our threads
+        pthread_t *t_idents;
+
+        // Allocates the space needed for the thread IDs
+        t_idents = (pthread_t *)(malloc(sizeof(pthread_t) * NUMOFTHREADS));
+
+        // Create the threads
         for (int i = 0; i < NUMOFTHREADS; i++) {
-                // count3s(i);
-                printf("WHAT WHO\n");
-                jared = pthread_create(&my_t_connector, NULL, count3s, 0);
-                pthread_join(my_t_connector, NULL);
+                pthread_create(&t_idents[i], NULL, count3s, i);
         }
+
+        // join the threads
+        for (int i = 0; i < NUMOFTHREADS; i++) {
+                pthread_join(t_idents[i], NULL);
+        }
+
+        clock_gettime(CLOCK_REALTIME, &endtime);
+
+        j = endtime.tv_sec - starttime.tv_sec;
+        k = endtime.tv_nsec - starttime.tv_nsec;
+
+        j = j*1000000000+k;
+
+        return j;
+
 }
 
 int main(int argc, char const *argv[])
@@ -87,15 +142,6 @@ int main(int argc, char const *argv[])
         time_t t;
 
         srand((unsigned)time(&t));
-
-        // printf("argc is %d \n", argc);
-        // printf("name of program is %s \n", argv[0]);
-        // if (argc > 1) {
-        //         printf("number is %s \n", argv[1]);
-        // } else {
-        //         printf("We need an argument >:( \n");
-        //         exit(1);
-        // }
 
         if (argc != 3) {
                 printf("Not correct arguments \n");
@@ -108,11 +154,12 @@ int main(int argc, char const *argv[])
         NUMOFTHREADS = atoi(argv[2]);
         SEGSIZE = size / NUMOFTHREADS;
 
-        printf("number is %s \n", argv[1]);
-        printf("number is %d \n", size);
-        printf("NumThr is %d \n", NUMOFTHREADS);
-        printf("Seg Si is %d \n", SEGSIZE);
-
+        if (DEBUG) {
+                printf("number is %s \n", argv[1]);
+                printf("number is %d \n", size);
+                printf("NumThr is %d \n", NUMOFTHREADS);
+                printf("Seg Size is %d \n", SEGSIZE);
+        }
         A = (int *)(malloc(sizeof(int) * size));
 
         if (A == NULL) {
@@ -125,24 +172,43 @@ int main(int argc, char const *argv[])
                 // printf("E%d \n", A[i]);
         }
 
-        // do the work parallel
+        // Count the threes in parallel
+        int parallel_time = count3s_parallel();
 
-        count3s_parallel();
+        
 
-        // for (int i = 0; i < size; i++) {
-        // 	count3s(i);
-        // }
 
-        // do the work serial
+        // since the COUNT for the parallel is defined before starting the
+        // timer i choose to define this one before timer as well.
         int local_count = 0;
+
+        // initialize the timer for the parallel work
+        struct timespec starttime, endtime;
+        int j, k;
+        clock_gettime(CLOCK_REALTIME, &starttime); // start the timer
+        
+
+        
+
+
+        // Count the threes in serial
         for (int i = 0; i < size; i++) {
                 if (A[i] == 3) {
                         local_count++;
                 }
         }
 
+        clock_gettime(CLOCK_REALTIME, &endtime);
+        j = endtime.tv_sec - starttime.tv_sec;
+        k = endtime.tv_nsec - starttime.tv_nsec;
+        j = j*1000000000+k;
+
+
+        printf("Time parallel: %d \n", parallel_time);
+        printf("Time serial:   %d \n", j);
+
         printf("parallel count is %d\n", COUNT);
-        printf("serial count is %d\n", local_count);
+        printf("serial count is   %d\n", local_count);
 
         return 0;
 }
