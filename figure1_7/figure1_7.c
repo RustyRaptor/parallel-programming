@@ -1,6 +1,31 @@
 // Ziad Arafat
-// Sep 07 2021
+// Created: Aug 31 2021
 // Figure 1.7 in the textbook
+
+/*
+Changelog
+08/31
+- added argument handling
+- Added handling to create an array of a certain size.
+- added random number generator to fill array
+- Created serial program to count 3s in array 
+
+09/07
+- tested thread creation using pthread
+- created function to generate threads to handle different sections of array
+
+09/10
+- corrected my thread code because it wasnt being joined so output was shown
+- before thread was closed.
+
+09/11
+- added timing code.
+
+09/12
+-
+
+
+*/
 
 #define DEBUG 1
 
