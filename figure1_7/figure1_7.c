@@ -116,6 +116,10 @@ int count3s_parallel()
 
         // Allocates the space needed for the thread IDs
         t_idents = (pthread_t *)(malloc(sizeof(pthread_t) * NUMOFTHREADS));
+
+        // in order to fix the "integer to pointer conversion" warning
+        // i made an array to store the indices for each thread that way
+        // i can pass it as a pointer in the for loop
         t_indices = (int *)(malloc(sizeof(int) * NUMOFTHREADS));
 
         // Create the threads
@@ -125,10 +129,15 @@ int count3s_parallel()
                                (void *)&t_indices[i]);
         }
 
+
         // wait for all the treads to finish.
         for (int i = 0; i < NUMOFTHREADS; i++) {
                 pthread_join(t_idents[i], NULL);
         }
+
+        // free the ids and indexes in memory so we dont leak
+        free(t_idents);
+        free(t_indices);
 
         // get the end time
         clock_gettime(CLOCK_REALTIME, &endtime);
@@ -206,6 +215,9 @@ int main(int argc, char const *argv[])
         j = endtime.tv_sec - starttime.tv_sec;
         k = endtime.tv_nsec - starttime.tv_nsec;
         j = j * 1000000000 + k;
+
+        // free the array
+        free(A);
 
         // print the times and counts
         printf("Time parallel: %d \n", parallel_time);
