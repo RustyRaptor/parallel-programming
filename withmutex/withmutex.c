@@ -191,8 +191,10 @@ int main(int argc, char const *argv[])
         }
         A = (int *)(malloc(sizeof(int) * size));
 
+        // if the array is null barf
         if (A == NULL) {
-                printf("Austin, we have a problem");
+                perror("Austin, we have a problem");
+                // printf("Austin, we have a problem");
                 exit(1);
         }
 

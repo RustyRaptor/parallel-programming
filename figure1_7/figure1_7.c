@@ -47,6 +47,7 @@ int COUNT = 0; // The count of threes we found for the parallel code
 int SEGSIZE; // the size of each chunk per tread
 int NUMOFTHREADS; // the number of threads to spawn
 
+
 /**
  * @brief Iterates through a chunk of the A array and counts the number of 
  * threes by updating the COUNT variable
@@ -113,6 +114,7 @@ int count3s_parallel()
         // our threads
         pthread_t *t_idents;
         int *t_indices;
+        
 
         // Allocates the space needed for the thread IDs
         t_idents = (pthread_t *)(malloc(sizeof(pthread_t) * NUMOFTHREADS));
@@ -121,6 +123,9 @@ int count3s_parallel()
         // i made an array to store the indices for each thread that way
         // i can pass it as a pointer in the for loop
         t_indices = (int *)(malloc(sizeof(int) * NUMOFTHREADS));
+
+        // allocate an array to store the individual results of the threads
+        // Then we can add them up afterwards
 
         // Create the threads
         for (int i = 0; i < NUMOFTHREADS; i++) {
@@ -178,11 +183,15 @@ int main(int argc, char const *argv[])
         }
         A = (int *)(malloc(sizeof(int) * size));
 
+        // if the array is null barf
         if (A == NULL) {
                 printf("Austin, we have a problem");
                 exit(1);
         }
 
+
+        // generate random numbers and fill them in the array
+        // the numbers are between 1 and 3 inclusive 
         for (int i = 0; i < size; i++) {
                 A[i] = rand() % 4;
 

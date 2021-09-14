@@ -46,6 +46,7 @@ int *A; // Pointer to our array in heap
 int COUNT = 0; // The count of threes we found for the parallel code
 int SEGSIZE; // the size of each chunk per tread
 int NUMOFTHREADS; // the number of threads to spawn
+int *t_results; // an array to store the results from each thread
 
 pthread_mutex_t mtex = PTHREAD_MUTEX_INITIALIZER; // this is our mutex variable 
 
@@ -81,20 +82,7 @@ void *count3s(void *idx)
 
         for (int i = mystart; i < myend; i++) {
                 if (A[i] == 3) {
-                        // if (DEBUG)
-                        //         printf("Found a three\n");
-
-                        // lock the mutex thereby waiting until other threads
-                        // are done with this section of the code before 
-                        // locking it.
-                        pthread_mutex_lock(&mtex); // lock the mutex
-
-
-                        COUNT++; // increment count
-
-                        // unlock the mutex to let the OS know we are done 
-                        // with this section of code.
-                        pthread_mutex_unlock(&mtex);
+                         t_results[*index]++; // increment result
                 }
         }
 
@@ -135,6 +123,8 @@ int count3s_parallel()
         // i can pass it as a pointer in the for loop
         t_indices = (int *)(malloc(sizeof(int) * NUMOFTHREADS));
 
+        t_results = (int *)(calloc(NUMOFTHREADS, sizeof(int) * NUMOFTHREADS));
+
         // Create the threads
         for (int i = 0; i < NUMOFTHREADS; i++) {
                 t_indices[i] = i;
@@ -146,6 +136,7 @@ int count3s_parallel()
         // wait for all the treads to finish.
         for (int i = 0; i < NUMOFTHREADS; i++) {
                 pthread_join(t_idents[i], NULL);
+                COUNT+=t_results[i];
         }
 
         // free the ids and indexes in memory so we dont leak
@@ -191,8 +182,11 @@ int main(int argc, char const *argv[])
         }
         A = (int *)(malloc(sizeof(int) * size));
 
+        // if the array is null barf
         if (A == NULL) {
-                printf("Austin, we have a problem");
+
+                // printf("Austin, we have a problem");
+                perror("Austin, we have a problem");
                 exit(1);
         }
 
