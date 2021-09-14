@@ -46,9 +46,18 @@ int *A; // Pointer to our array in heap
 int COUNT = 0; // The count of threes we found for the parallel code
 int SEGSIZE; // the size of each chunk per tread
 int NUMOFTHREADS; // the number of threads to spawn
-int *t_results; // an array to store the results from each thread
 
-pthread_mutex_t mtex = PTHREAD_MUTEX_INITIALIZER; // this is our mutex variable 
+
+// This is a struct that will hold our data in the array for padding.
+struct padded_int {
+        // We need 64B of padding. Because our processor has 64B cache lines
+        int value; // an int is 4 bytes
+        char padding[60]; // now we need 64-4 more bytes so we make 60 chars
+};
+
+struct padded_int *t_results; // an array to store the results from each thread
+
+pthread_mutex_t mtex = PTHREAD_MUTEX_INITIALIZER; // this is our mutex variable
 
 /**
  * @brief Iterates through a chunk of the A array and counts the number of 
@@ -75,6 +84,10 @@ void *count3s(void *idx)
         int mystart = *index * SEGSIZE;
         int myend = mystart + SEGSIZE;
 
+        int valueforthread;
+        
+        // valueforthread->value = 
+        
         // if (DEBUG) {
         // printf("start is %d\n", mystart);
         // printf("end is   %d\n", myend);
@@ -82,9 +95,11 @@ void *count3s(void *idx)
 
         for (int i = mystart; i < myend; i++) {
                 if (A[i] == 3) {
-                         t_results[*index]++; // increment result
+                        valueforthread++; // increment result
                 }
         }
+
+        t_results[*index].value = valueforthread;
 
         return (void *)0;
 }
@@ -123,7 +138,11 @@ int count3s_parallel()
         // i can pass it as a pointer in the for loop
         t_indices = (int *)(malloc(sizeof(int) * NUMOFTHREADS));
 
-        t_results = (int *)(calloc(NUMOFTHREADS, sizeof(int) * NUMOFTHREADS));
+
+
+        // We will initialize the padded ints manually in the thread because
+        // I dont know how calloc will behave with a struct.
+        t_results = (struct padded_int *)(malloc(sizeof(int) * NUMOFTHREADS));
 
         // Create the threads
         for (int i = 0; i < NUMOFTHREADS; i++) {
@@ -132,11 +151,10 @@ int count3s_parallel()
                                (void *)&t_indices[i]);
         }
 
-
         // wait for all the treads to finish.
         for (int i = 0; i < NUMOFTHREADS; i++) {
                 pthread_join(t_idents[i], NULL);
-                COUNT+=t_results[i];
+                COUNT += t_results[i].value;
         }
 
         // free the ids and indexes in memory so we dont leak
@@ -184,7 +202,6 @@ int main(int argc, char const *argv[])
 
         // if the array is null barf
         if (A == NULL) {
-
                 // printf("Austin, we have a problem");
                 perror("Austin, we have a problem");
                 exit(1);
