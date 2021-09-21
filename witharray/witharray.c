@@ -47,8 +47,9 @@ int COUNT = 0; // The count of threes we found for the parallel code
 int SEGSIZE; // the size of each chunk per tread
 int NUMOFTHREADS; // the number of threads to spawn
 int *t_results; // an array to store the results from each thread
+int SIZE; // The size of the array
 
-pthread_mutex_t mtex = PTHREAD_MUTEX_INITIALIZER; // this is our mutex variable 
+pthread_mutex_t mtex = PTHREAD_MUTEX_INITIALIZER; // this is our mutex variable
 
 /**
  * @brief Iterates through a chunk of the A array and counts the number of 
@@ -80,10 +81,21 @@ void *count3s(void *idx)
         // printf("start is %d\n", mystart);
         // printf("end is   %d\n", myend);
         // }
-
+        
         for (int i = mystart; i < myend; i++) {
                 if (A[i] == 3) {
-                         t_results[*index]++; // increment result
+                        t_results[*index]++; // increment result
+                }
+        }
+        // printf("Threads %d index %d size %d END %d \n", NUMOFTHREADS, *index, SIZE, myend);
+        if ((myend < SIZE) && (*index == NUMOFTHREADS-1)) {
+                int remain = SIZE - myend;
+                printf("Remainder: %d \n", remain);
+                // printf("ACTIVE \n");
+                for (int i = myend; i < SIZE; i++) {
+                        if (A[i] == 3) {
+                                t_results[*index]++;
+                        }
                 }
         }
 
@@ -133,11 +145,10 @@ int count3s_parallel()
                                (void *)&t_indices[i]);
         }
 
-
         // wait for all the treads to finish.
         for (int i = 0; i < NUMOFTHREADS; i++) {
                 pthread_join(t_idents[i], NULL);
-                COUNT+=t_results[i];
+                COUNT += t_results[i];
         }
 
         free(t_results);
@@ -160,7 +171,6 @@ int count3s_parallel()
 
 int main(int argc, char const *argv[])
 {
-        int size;
 
         time_t t;
 
@@ -173,28 +183,28 @@ int main(int argc, char const *argv[])
                 exit(1);
         }
 
-        size = atoi(argv[1]);
+        SIZE = atoi(argv[1]);
         NUMOFTHREADS = atoi(argv[2]);
-        SEGSIZE = size / NUMOFTHREADS;
+        SEGSIZE = SIZE / NUMOFTHREADS;
 
         if (DEBUG) {
                 printf("number is %s \n", argv[1]);
-                printf("number is %d \n", size);
+                printf("number is %d \n", SIZE);
                 printf("NumThr is %d \n", NUMOFTHREADS);
                 printf("Seg Size is %d \n", SEGSIZE);
         }
-        A = (int *)(malloc(sizeof(int) * size));
+        A = (int *)(malloc(sizeof(int) * SIZE));
 
         // if the array is null barf
         if (A == NULL) {
-
                 // printf("Austin, we have a problem");
                 perror("Austin, we have a problem");
                 exit(1);
         }
 
-        for (int i = 0; i < size; i++) {
-                A[i] = rand() % 4;
+        for (int i = 0; i < SIZE; i++) {
+                // A[i] = rand() % 4;
+                A[i] = 3;
 
                 // printf("E%d \n", A[i]);
         }
@@ -212,7 +222,7 @@ int main(int argc, char const *argv[])
         clock_gettime(CLOCK_REALTIME, &starttime); // start the timer
 
         // Count the threes in serial
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < SIZE; i++) {
                 if (A[i] == 3) {
                         local_count++;
                 }
@@ -235,6 +245,8 @@ int main(int argc, char const *argv[])
 
         printf("parallel count is %d\n", COUNT);
         printf("serial count is   %d\n", local_count);
+
+        printf("SEGSIZE %d \n", SEGSIZE);
 
         return 0;
 }
