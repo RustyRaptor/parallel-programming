@@ -73,6 +73,7 @@ void *count3s(void *idx)
 
         int *index = (int *)idx;
         int mystart = *index * SEGSIZE;
+        // printf("the index is %d \n ", *index);
         int myend = mystart + SEGSIZE;
 
         // if (DEBUG) {
@@ -138,6 +139,8 @@ int count3s_parallel()
                 pthread_join(t_idents[i], NULL);
                 COUNT+=t_results[i];
         }
+
+        free(t_results);
 
         // free the ids and indexes in memory so we dont leak
         free(t_idents);

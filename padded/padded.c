@@ -35,7 +35,7 @@ Changelog
 
 */
 
-#define DEBUG 0 // flag to print debug values
+#define DEBUG 1 // flag to print debug values
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -84,7 +84,7 @@ void *count3s(void *idx)
         int mystart = *index * SEGSIZE;
         int myend = mystart + SEGSIZE;
 
-        int valueforthread;
+        int valueforthread = 0;
         
         // valueforthread->value = 
         
@@ -99,7 +99,16 @@ void *count3s(void *idx)
                 }
         }
 
-        t_results[*index].value = valueforthread;
+        printf("%d \n", valueforthread);
+
+        t_results[*index].value = 0;
+        t_results[*index].value += valueforthread;
+
+        
+
+        
+
+        
 
         return (void *)0;
 }
@@ -150,11 +159,11 @@ int count3s_parallel()
                 pthread_create(&t_idents[i], NULL, count3s,
                                (void *)&t_indices[i]);
         }
-
+        COUNT = 0;
         // wait for all the treads to finish.
         for (int i = 0; i < NUMOFTHREADS; i++) {
                 pthread_join(t_idents[i], NULL);
-                COUNT += t_results[i].value;
+                COUNT += (t_results[i].value);
         }
 
         // free the ids and indexes in memory so we dont leak
