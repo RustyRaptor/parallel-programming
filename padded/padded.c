@@ -86,12 +86,11 @@ void *count3s(void *idx)
 
         int valueforthread = 0;
 
-        // valueforthread->value =
 
-        // if (DEBUG) {
-        // printf("start is %d\n", mystart);
-        // printf("end is   %d\n", myend);
-        // }
+        if (DEBUG) {
+                printf("start is %d\n", mystart);
+                printf("end is   %d\n", myend);
+        }
 
         for (int i = mystart; i < myend; i++) {
                 if (A[i] == 3) {
@@ -171,7 +170,7 @@ int count3s_parallel()
         // wait for all the treads to finish.
         for (int i = 0; i < NUMOFTHREADS; i++) {
                 pthread_join(t_idents[i], NULL);
-                COUNT += (t_results[i].value);
+                COUNT += t_results[i].value;
         }
 
         // free the ids and indexes in memory so we dont leak
