@@ -87,7 +87,7 @@ void *count3s(void *idx)
                         t_results[*index]++; // increment result
                 }
         }
-        
+
         // printf("Threads %d index %d size %d END %d \n", NUMOFTHREADS, *index, SIZE, myend);
 
         // When we reach the final index we will calculate the remaining values in the array
@@ -209,8 +209,8 @@ int main(int argc, char const *argv[])
         }
 
         for (int i = 0; i < SIZE; i++) {
-                // A[i] = rand() % 4;
-                A[i] = 3;
+                A[i] = rand() % 4;
+                // A[i] = 3;
 
                 // printf("E%d \n", A[i]);
         }
