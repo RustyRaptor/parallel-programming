@@ -87,10 +87,16 @@ void *count3s(void *idx)
                         t_results[*index]++; // increment result
                 }
         }
+        
         // printf("Threads %d index %d size %d END %d \n", NUMOFTHREADS, *index, SIZE, myend);
+
+        // When we reach the final index we will calculate the remaining values in the array
+        // So that we can add them to the result. 
+        // This can become quite high once you go past the 50% mark of the array size
+        // but our tests will never go that far so this is a pretty good solution. 
         if ((myend < SIZE) && (*index == NUMOFTHREADS-1)) {
-                int remain = SIZE - myend;
-                printf("Remainder: %d \n", remain);
+                // int remain = SIZE - myend;
+                // printf("Remainder: %d \n", remain);
                 // printf("ACTIVE \n");
                 for (int i = myend; i < SIZE; i++) {
                         if (A[i] == 3) {
