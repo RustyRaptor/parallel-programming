@@ -48,7 +48,6 @@ int SEGSIZE; // the size of each chunk per tread
 int NUMOFTHREADS; // the number of threads to spawn
 int SIZE;
 
-
 // This is a struct that will hold our data in the array for padding.
 struct padded_int {
         // We need 64B of padding. Because our processor has 64B cache lines
@@ -86,9 +85,9 @@ void *count3s(void *idx)
         int myend = mystart + SEGSIZE;
 
         int valueforthread = 0;
-        
-        // valueforthread->value = 
-        
+
+        // valueforthread->value =
+
         // if (DEBUG) {
         // printf("start is %d\n", mystart);
         // printf("end is   %d\n", myend);
@@ -100,11 +99,11 @@ void *count3s(void *idx)
                 }
         }
 
-                // When we reach the final index we will calculate the remaining values in the array
-        // So that we can add them to the result. 
+        // When we reach the final index we will calculate the remaining values in the array
+        // So that we can add them to the result.
         // This can become quite high once you go past the 50% mark of the array size
-        // but our tests will never go that far so this is a pretty good solution. 
-        if ((myend < SIZE) && (*index == NUMOFTHREADS-1)) {
+        // but our tests will never go that far so this is a pretty good solution.
+        if ((myend < SIZE) && (*index == NUMOFTHREADS - 1)) {
                 // int remain = SIZE - myend;
                 // printf("Remainder: %d \n", remain);
                 // printf("ACTIVE \n");
@@ -119,12 +118,6 @@ void *count3s(void *idx)
 
         t_results[*index].value = 0;
         t_results[*index].value += valueforthread;
-
-        
-
-        
-
-        
 
         return (void *)0;
 }
@@ -163,11 +156,10 @@ int count3s_parallel()
         // i can pass it as a pointer in the for loop
         t_indices = (int *)(malloc(sizeof(int) * NUMOFTHREADS));
 
-
-
         // We will initialize the padded ints manually in the thread because
         // I dont know how calloc will behave with a struct.
-        t_results = (struct padded_int *)(malloc(sizeof(int) * NUMOFTHREADS));
+        t_results = (struct padded_int *)(malloc(sizeof(struct padded_int) *
+                                                 NUMOFTHREADS));
 
         // Create the threads
         for (int i = 0; i < NUMOFTHREADS; i++) {
@@ -200,7 +192,6 @@ int count3s_parallel()
 
 int main(int argc, char const *argv[])
 {
-
         time_t t;
 
         srand((unsigned)time(&t));
