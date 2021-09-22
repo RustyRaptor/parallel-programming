@@ -1,3 +1,9 @@
+"""
+This simple program is to quickly parse out the outputs so we can get the average
+times of the runs. outs.txt must contain the raw console outputs
+
+"""
+
 from statistics import mean
 par = []
 ser = []
@@ -28,3 +34,6 @@ with open('./outs.txt') as reader:
                         vals += 1
 
 print("ser: ", avgs, "par: ", avgp, threads)
+
+
+
