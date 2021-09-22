@@ -1,0 +1,367 @@
+#### Raw console outputs
+
+##### 1 Thread
+
+```bash
+doge@godemperordoge1998 ~/D/p/witharray (main)> make
+gcc -O0 -Wall -Werror -Wextra -pedantic -pthread -lpthread -o witharray witharray.c
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 1
+Time parallel: 81863555 
+Time serial:   75568341 
+parallel count is 2500620
+serial count is   2500620
+SEGSIZE 10000000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 1
+Time parallel: 79677104 
+Time serial:   75715147 
+parallel count is 2499935
+serial count is   2499935
+SEGSIZE 10000000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 1
+Time parallel: 80084768 
+Time serial:   76378151 
+parallel count is 2498190
+serial count is   2498190
+SEGSIZE 10000000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 1
+Time parallel: 83075721 
+Time serial:   78784952 
+parallel count is 2499420
+serial count is   2499420
+SEGSIZE 10000000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 1
+Time parallel: 79219853 
+Time serial:   80265097 
+parallel count is 2503792
+serial count is   2503792
+SEGSIZE 10000000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> 
+```
+
+##### 2 Threads
+
+```bash
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 2
+^[[ATime parallel: 117217005 
+Time serial:   76232392 
+parallel count is 2500931
+serial count is   2500931
+SEGSIZE 5000000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 2
+Time parallel: 117227900 
+Time serial:   75723948 
+parallel count is 2499572
+serial count is   2499572
+SEGSIZE 5000000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 2
+Time parallel: 125809927 
+Time serial:   76198239 
+parallel count is 2499572
+serial count is   2499572
+SEGSIZE 5000000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 2
+^[[A
+Time parallel: 117415982 
+Time serial:   76056322 
+parallel count is 2497775
+serial count is   2497775
+SEGSIZE 5000000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 2
+Time parallel: 116840839 
+Time serial:   76606811 
+parallel count is 2497775
+serial count is   2497775
+SEGSIZE 5000000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> 
+```
+
+##### 4 Threads
+
+```bash
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 4
+Time parallel: 119560039 
+Time serial:   75835135 
+parallel count is 2498552
+serial count is   2498552
+SEGSIZE 2500000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 4
+Time parallel: 110999175 
+Time serial:   75637135 
+parallel count is 2502155
+serial count is   2502155
+SEGSIZE 2500000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 4
+Time parallel: 120659063 
+Time serial:   75797630 
+parallel count is 2502155
+serial count is   2502155
+SEGSIZE 2500000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 4
+Time parallel: 105918640 
+Time serial:   75691681 
+parallel count is 2500763
+serial count is   2500763
+SEGSIZE 2500000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 4
+Time parallel: 118025767 
+Time serial:   75826754 
+parallel count is 2501575
+serial count is   2501575
+SEGSIZE 2500000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> 
+
+```
+
+##### 8 Threads
+
+```bash
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 8
+Time parallel: 75531675 
+Time serial:   76051224 
+parallel count is 2500300
+serial count is   2500300
+SEGSIZE 1250000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 8
+Time parallel: 75182817 
+Time serial:   75753420 
+parallel count is 2499436
+serial count is   2499436
+SEGSIZE 1250000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 8
+Time parallel: 76046405 
+Time serial:   76348748 
+parallel count is 2501044
+serial count is   2501044
+SEGSIZE 1250000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 8
+Time parallel: 75545853 
+Time serial:   76008551 
+parallel count is 2499779
+serial count is   2499779
+SEGSIZE 1250000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 8
+Time parallel: 75960779 
+Time serial:   78840754 
+parallel count is 2499779
+serial count is   2499779
+SEGSIZE 1250000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> 
+
+```
+
+##### 16 threads
+
+```bash
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 16
+Time parallel: 51618507 
+Time serial:   79680457 
+parallel count is 2500182
+serial count is   2500182
+SEGSIZE 625000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 16
+Time parallel: 52043701 
+Time serial:   75934658 
+parallel count is 2502307
+serial count is   2502307
+SEGSIZE 625000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 16
+Time parallel: 51582748 
+Time serial:   75689934 
+parallel count is 2499453
+serial count is   2499453
+SEGSIZE 625000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 16
+Time parallel: 52321250 
+Time serial:   76262634 
+parallel count is 2499453
+serial count is   2499453
+SEGSIZE 625000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 16
+Time parallel: 51572481 
+Time serial:   76141109 
+parallel count is 2498729
+serial count is   2498729
+SEGSIZE 625000 
+doge@godemperordoge1998 ~/D/p/witharray (main)> 
+
+```
+
+##### 32 threads
+```bash
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 32
+Time parallel: 52033155 
+Time serial:   75630360 
+parallel count is 2502265
+serial count is   2502265
+SEGSIZE 312500 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 32
+Time parallel: 40560746 
+Time serial:   75752932 
+parallel count is 2496956
+serial count is   2496956
+SEGSIZE 312500 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 32
+Time parallel: 33518090 
+Time serial:   79269021 
+parallel count is 2499218
+serial count is   2499218
+SEGSIZE 312500 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 32
+Time parallel: 42830797 
+Time serial:   75999611 
+parallel count is 2499218
+serial count is   2499218
+SEGSIZE 312500 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 32
+Time parallel: 38449513 
+Time serial:   76038163 
+parallel count is 2498024
+serial count is   2498024
+SEGSIZE 312500 
+doge@godemperordoge1998 ~/D/p/witharray (main)> 
+```
+
+##### 64 threads
+
+```bash
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 64
+Time parallel: 23108945 
+Time serial:   76429135 
+parallel count is 2501086
+serial count is   2501086
+SEGSIZE 156250 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 64
+Time parallel: 32038014 
+Time serial:   78676976 
+parallel count is 2501086
+serial count is   2501086
+SEGSIZE 156250 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 64
+Time parallel: 29387118 
+Time serial:   75795394 
+parallel count is 2499983
+serial count is   2499983
+SEGSIZE 156250 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 64
+Time parallel: 21765129 
+Time serial:   75698106 
+parallel count is 2499590
+serial count is   2499590
+SEGSIZE 156250 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 64
+Time parallel: 26043536 
+Time serial:   76504843 
+parallel count is 2499590
+serial count is   2499590
+SEGSIZE 156250 
+doge@godemperordoge1998 ~/D/p/witharray (main)> 
+```
+
+##### 128 threads
+```bash
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 128
+Time parallel: 27093181 
+Time serial:   75747694 
+parallel count is 2499556
+serial count is   2499556
+SEGSIZE 78125 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 128
+Time parallel: 23288786 
+Time serial:   76220100 
+parallel count is 2501938
+serial count is   2501938
+SEGSIZE 78125 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 128
+Time parallel: 28004540 
+Time serial:   84610064 
+parallel count is 2498595
+serial count is   2498595
+SEGSIZE 78125 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 128
+Time parallel: 24022050 
+Time serial:   76480189 
+parallel count is 2498595
+serial count is   2498595
+SEGSIZE 78125 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000 128
+Time parallel: 26019790 
+Time serial:   76096691 
+parallel count is 2500116
+serial count is   2500116
+SEGSIZE 78125 
+doge@godemperordoge1998 ~/D/p/witharray (main)> 
+```
+
+
+##### 256 threads
+```bash
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000  256
+Time parallel: 30797702 
+Time serial:   76585020 
+parallel count is 2500664
+serial count is   2500664
+SEGSIZE 39062 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000  256
+Time parallel: 30520153 
+Time serial:   76308938 
+parallel count is 2502137
+serial count is   2502137
+SEGSIZE 39062 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000  256
+Time parallel: 29454864 
+Time serial:   76265916 
+parallel count is 2501344
+serial count is   2501344
+SEGSIZE 39062 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000  256
+Time parallel: 32954541 
+Time serial:   76108284 
+parallel count is 2498982
+serial count is   2498982
+SEGSIZE 39062 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000  256
+Time parallel: 33016071 
+Time serial:   75821655 
+parallel count is 2498982
+serial count is   2498982
+SEGSIZE 39062 
+doge@godemperordoge1998 ~/D/p/witharray (main)> 
+```
+
+##### 512 Threads
+
+```bash
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000  512
+^[[ATime parallel: 48074062 
+Time serial:   76889948 
+parallel count is 2503817
+serial count is   2503817
+SEGSIZE 19531 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000  512
+Time parallel: 44829655 
+Time serial:   76344138 
+parallel count is 2500075
+serial count is   2500075
+SEGSIZE 19531 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000  512
+Time parallel: 45507953 
+Time serial:   75874944 
+parallel count is 2500075
+serial count is   2500075
+SEGSIZE 19531 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000  512
+Time parallel: 49365148 
+Time serial:   76632722 
+parallel count is 2499084
+serial count is   2499084
+SEGSIZE 19531 
+doge@godemperordoge1998 ~/D/p/witharray (main)> ./witharray 10000000  512
+Time parallel: 44905711 
+Time serial:   77069929 
+parallel count is 2499084
+serial count is   2499084
+SEGSIZE 19531 
+doge@godemperordoge1998 ~/D/p/witharray (main)> 
+
+
+```
