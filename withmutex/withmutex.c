@@ -204,7 +204,10 @@ int main(int argc, char const *argv[])
         // intitilize the random number with the time as the seed
         srand((unsigned)time(&t));
 
+
+        // check the user arguments
         if (argc != 3) {
+                // if they are wrong count barf
                 printf("Not correct arguments \n");
                 printf("Usage %s <size of array> <numbe>r of threads> \n",
                        argv[0]);
