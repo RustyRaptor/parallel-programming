@@ -8,6 +8,9 @@
  * the number of threes in the array using a serial method and a parallel method
  * it will return the counts for each attempt as well as the running times. 
  * 
+ * This version will use a single variable shared by all the threads without
+ * uring a mutex. We expect it to return incorrect results
+ * 
  */
 
 /**
@@ -32,6 +35,8 @@ Changelog
 09/12
 - fixed timing code. 
 
+09/21
+- fixed the way the array is split for the threads
 
 */
 
@@ -46,7 +51,7 @@ int *A; // Pointer to our array in heap
 int COUNT = 0; // The count of threes we found for the parallel code
 int SEGSIZE; // the size of each chunk per tread
 int NUMOFTHREADS; // the number of threads to spawn
-int SIZE;
+int SIZE; // The size of the input array
 
 /**
  * @brief Iterates through a chunk of the A array and counts the number of 
@@ -69,19 +74,20 @@ void *count3s(void *idx)
         // if (DEBUG)
         //         printf("I ran once %d\n", index);
 
-        int *index = (int *)idx;
-        int mystart = *index * SEGSIZE;
-        int myend = mystart + SEGSIZE;
+        int *index = (int *)idx; // cast the void star input to an int ptr
+        int mystart = *index * SEGSIZE; // set the starting point for the thread
+        int myend = mystart + SEGSIZE; // set the end point for the thread
 
         // if (DEBUG) {
         // printf("start is %d\n", mystart);
         // printf("end is   %d\n", myend);
         // }
 
+        // iterate through our section of the array and count the threes
         for (int i = mystart; i < myend; i++) {
                 if (A[i] == 3) {
-                        // if (DEBUG)
-                        //         printf("Found a three\n");
+                        if (DEBUG)
+                                printf("Found a three\n");
                         COUNT++;
                 }
         }
@@ -91,14 +97,21 @@ void *count3s(void *idx)
         // This can become quite high once you go past the 50% mark of the array size
         // but our tests will never go that far so this is a pretty good solution.
         if ((myend < SIZE) && (*index == NUMOFTHREADS - 1)) {
-                // int remain = SIZE - myend;
-                // printf("Remainder: %d \n", remain);
+
+                if (DEBUG){
+                        int remain = SIZE - myend;
+                        printf("Remainder: %d \n", remain);
+                }
+
                 // printf("ACTIVE \n");
+
+                // iterate through the remainder of the array and count the 3s
                 for (int i = myend; i < SIZE; i++) {
                         if (A[i] == 3) {
                                 COUNT++; // increment count
                         }
                 }
+
                 if (DEBUG) {
                         printf("The count is now %d threads %d index %d SIZE %d end %d \n",
                                COUNT, NUMOFTHREADS, *index, SIZE, myend);
@@ -109,7 +122,8 @@ void *count3s(void *idx)
 }
 
 /**
- * @brief This function is used to spawn the appropriate number of threads
+ * @brief This function is used to spawn the appropriate number of threads as 
+ * well as keep track of their progress. 
  * 
  * @return int containing the time it took
  * 
@@ -175,20 +189,29 @@ int count3s_parallel()
 
 int main(int argc, char const *argv[])
 {
-        time_t t;
+        // this variable stores the time for generating the random numbers.
+        time_t t; 
 
         srand((unsigned)time(&t));
 
+        // check if the correct arguments are used
         if (argc != 3) {
+
+                // if they are wrong barf and exit
                 printf("Not correct arguments \n");
                 printf("Usage %s <size of array> <number of threads> \n",
                        argv[0]);
                 exit(1);
         }
 
+        // Convert the user input to integers
         SIZE = atoi(argv[1]);
-        NUMOFTHREADS = atoi(argv[2]);
+        NUMOFTHREADS = atoi(argv[2]); 
+
+        // Set the size of the array chunks to process to the size over the 
+        // number of threads
         SEGSIZE = SIZE / NUMOFTHREADS;
+
 
         if (DEBUG) {
                 printf("number is %s \n", argv[1]);
@@ -196,6 +219,8 @@ int main(int argc, char const *argv[])
                 printf("NumThr is %d \n", NUMOFTHREADS);
                 printf("Seg Size is %d \n", SEGSIZE);
         }
+
+        // Allocate the array based on the input size
         A = (int *)(malloc(sizeof(int) * SIZE));
 
         // if the array is null barf
@@ -208,20 +233,19 @@ int main(int argc, char const *argv[])
         // the numbers are between 1 and 3 inclusive
         for (int i = 0; i < SIZE; i++) {
                 A[i] = rand() % 4;
-
                 // printf("E%d \n", A[i]);
         }
 
         // Count the threes in parallel
-        int parallel_time = count3s_parallel();
+        int parallel_time = count3s_parallel(); 
 
-        // since the COUNT for the parallel is defined before starting the
-        // timer i choose to define this one before timer as well.
+        // initialize the count for the serial code
         int local_count = 0;
 
         // initialize the timer for the parallel work
         struct timespec starttime, endtime;
         int j, k;
+
         clock_gettime(CLOCK_REALTIME, &starttime); // start the timer
 
         // Count the threes in serial
