@@ -1,6 +1,6 @@
 // Ziad Arafat
-// Created: Aug 31 2021
-// Figure 1.7 in the textbook
+// Created: Sep 19 2021
+// Figure 1.11 in the textbook
 
 /**
  * @brief This program will create an array of a specified size and fill it
@@ -8,6 +8,9 @@
  * the number of threes in the array using a serial method and a parallel method
  * it will return the counts for each attempt as well as the running times. 
  * 
+ * In this version we will create a struct called padded_int which will contain
+ * the count as well as a padding of chars set to fill up the chache line of 
+ * the maching we run it on.
  */
 
 /**

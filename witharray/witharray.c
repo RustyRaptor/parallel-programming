@@ -1,6 +1,6 @@
 // Ziad Arafat
-// Created: Aug 31 2021
-// Figure 1.7 in the textbook
+// Created: sep 18 2021
+// Figure 1.10 in the textbook
 
 /**
  * @brief This program will create an array of a specified size and fill it
