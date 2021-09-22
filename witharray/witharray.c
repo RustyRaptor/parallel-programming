@@ -12,25 +12,18 @@
 
 /**
 Changelog
-08/31
-- added argument handling
-- Added handling to create an array of a certain size.
-- added random number generator to fill array
-- Created serial program to count 3s in array 
+09/17
+- Copied code from the withmutex.c code
+- added dynamic array allocation for the results of the threads
+- removed the mutex lock and unlock
+- modified the thread to indrement the corresponding item in the array instead of global count
 
-09/07
-- tested thread creation using pthread
-- created function to generate threads to handle different sections of array
 
-09/10
-- corrected my thread code because it wasnt being joined so output was shown
-- before thread was closed.
+09/19
+- added free() calls to clean up the memory when done
 
-09/11
-- added timing code.
-
-09/12
-- fixed timing code. 
+09/21
+- fixed the way the array is split for the threads
 
 
 */
@@ -53,7 +46,7 @@ pthread_mutex_t mtex = PTHREAD_MUTEX_INITIALIZER; // this is our mutex variable
 
 /**
  * @brief Iterates through a chunk of the A array and counts the number of 
- * threes by updating the COUNT variable
+ * threes by updating an item in a results array corresponding to the thread.
  * 
  * 
  * @param index The index of the array chunks re are working with
@@ -61,27 +54,29 @@ pthread_mutex_t mtex = PTHREAD_MUTEX_INITIALIZER; // this is our mutex variable
  * 
  * @pre The global A variable must be a pointer to an array in heap containing numbers between 
  * 1 and 3. index must be a number referring to the index of the chunk we want
- * to work through starting at 0. The global COUNT variable must contain the
- * number of threes we have already counted
+ * to work through starting at 0. The global t_results array must be 0 at the
+ * corresponding index 
  * 
- * @post When done the COUNT variable must be updated to have the number of 
- * threes found in our chunk of the array
+ * @post When done the array element corresponding to the thread must have the 
+ * number of threes we found in our chunk of the array
  */
 void *count3s(void *idx)
 {
-        // if (DEBUG)
-        //         printf("I ran once %d\n", index);
+        int *index = (int *)idx; // cast the void star input to an int ptr
+        int mystart = *index * SEGSIZE; // set the starting point for the thread
+        int myend = mystart + SEGSIZE; // set the end point for the thread
 
-        int *index = (int *)idx;
-        int mystart = *index * SEGSIZE;
-        // printf("the index is %d \n ", *index);
-        int myend = mystart + SEGSIZE;
+        if (DEBUG) {
+                printf("I ran once %d\n", *index);
+        }
 
-        // if (DEBUG) {
-        // printf("start is %d\n", mystart);
-        // printf("end is   %d\n", myend);
-        // }
-        
+        if (DEBUG) {
+                printf("start is %d\n", mystart);
+                printf("end is   %d\n", myend);
+        }
+
+        // iterate through our chunk and increment our array element when a
+        // three is found
         for (int i = mystart; i < myend; i++) {
                 if (A[i] == 3) {
                         t_results[*index]++; // increment result
@@ -91,13 +86,16 @@ void *count3s(void *idx)
         // printf("Threads %d index %d size %d END %d \n", NUMOFTHREADS, *index, SIZE, myend);
 
         // When we reach the final index we will calculate the remaining values in the array
-        // So that we can add them to the result. 
+        // So that we can add them to the result.
         // This can become quite high once you go past the 50% mark of the array size
-        // but our tests will never go that far so this is a pretty good solution. 
-        if ((myend < SIZE) && (*index == NUMOFTHREADS-1)) {
-                // int remain = SIZE - myend;
-                // printf("Remainder: %d \n", remain);
-                // printf("ACTIVE \n");
+        // but our tests will never go that far so this is a pretty good solution.
+        if ((myend < SIZE) && (*index == NUMOFTHREADS - 1)) {
+                if (DEBUG) {
+                        int remain = SIZE - myend;
+                        printf("Remainder: %d \n", remain);
+                }
+
+                // iterate through the remainder of the array and count the 3s
                 for (int i = myend; i < SIZE; i++) {
                         if (A[i] == 3) {
                                 t_results[*index]++;
@@ -109,11 +107,12 @@ void *count3s(void *idx)
 }
 
 /**
- * @brief This function is used to spawn the appropriate number of threads
+ * @brief This function is used to spawn the appropriate number of threads and 
+ * also gathers the results of each thread and sums them.
  * 
  * @return int containing the time it took
  * 
- * @pre The global COUNT variable is 0. NUMOFTHREADS is greater than 0.
+ * @pre Global COUNT is 0. NUMOFTHREADS is greater than 0.
  * SEGSIZE is the size of the array divided by NUMOFTHREADS. the A variable
  * points to an array in heap. 
  * 
@@ -142,6 +141,7 @@ int count3s_parallel()
         // i can pass it as a pointer in the for loop
         t_indices = (int *)(malloc(sizeof(int) * NUMOFTHREADS));
 
+        // allocate an array of ints to store the results.
         t_results = (int *)(calloc(NUMOFTHREADS, sizeof(int) * NUMOFTHREADS));
 
         // Create the threads
@@ -157,11 +157,10 @@ int count3s_parallel()
                 COUNT += t_results[i];
         }
 
-        free(t_results);
-
-        // free the ids and indexes in memory so we dont leak
+        // free the three arrays we made so we dont leak.
         free(t_idents);
         free(t_indices);
+        free(t_results);
 
         // get the end time
         clock_gettime(CLOCK_REALTIME, &endtime);
@@ -177,20 +176,27 @@ int count3s_parallel()
 
 int main(int argc, char const *argv[])
 {
-
+        // this variable stores the time for generating the random numbers.
         time_t t;
 
+        // intitilize the random number with the time as the seed
         srand((unsigned)time(&t));
 
+        // check the user arguments
         if (argc != 3) {
+                // if they are wrong count barf
                 printf("Not correct arguments \n");
-                printf("Usage %s <size of array> <number of threads> \n",
+                printf("Usage %s <size of array> <numbe>r of threads> \n",
                        argv[0]);
                 exit(1);
         }
 
+        // Convert the user input to integers
         SIZE = atoi(argv[1]);
         NUMOFTHREADS = atoi(argv[2]);
+
+        // Set the size of the array chunks to process to the size over the
+        // number of threads
         SEGSIZE = SIZE / NUMOFTHREADS;
 
         if (DEBUG) {
@@ -199,6 +205,8 @@ int main(int argc, char const *argv[])
                 printf("NumThr is %d \n", NUMOFTHREADS);
                 printf("Seg Size is %d \n", SEGSIZE);
         }
+
+        // Allocate the array based on the input size
         A = (int *)(malloc(sizeof(int) * SIZE));
 
         // if the array is null barf
@@ -208,11 +216,17 @@ int main(int argc, char const *argv[])
                 exit(1);
         }
 
+        // generate random numbers and fill them in the array
+        // the numbers are between 1 and 3 inclusive
         for (int i = 0; i < SIZE; i++) {
-                A[i] = rand() % 4;
-                // A[i] = 3;
-
-                // printf("E%d \n", A[i]);
+                // if we are debugging lets make them all threes.
+                // that way we can tell if something isnt
+                // being counted.
+                if (DEBUG) {
+                        A[i] = 3;
+                } else {
+                        A[i] = rand() % 4;
+                }
         }
 
         // Count the threes in parallel
@@ -252,7 +266,9 @@ int main(int argc, char const *argv[])
         printf("parallel count is %d\n", COUNT);
         printf("serial count is   %d\n", local_count);
 
-        printf("SEGSIZE %d \n", SEGSIZE);
+        if (DEBUG) {
+                printf("SEGSIZE %d \n", SEGSIZE);
+        }
 
         return 0;
 }
