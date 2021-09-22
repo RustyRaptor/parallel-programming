@@ -35,6 +35,9 @@ Changelog
 09/12
 - fixed timing code. 
 
+09/19
+- added free() calls to clean up the memory when done
+
 09/21
 - fixed the way the array is split for the threads
 
@@ -78,10 +81,10 @@ void *count3s(void *idx)
         int mystart = *index * SEGSIZE; // set the starting point for the thread
         int myend = mystart + SEGSIZE; // set the end point for the thread
 
-        // if (DEBUG) {
-        // printf("start is %d\n", mystart);
-        // printf("end is   %d\n", myend);
-        // }
+        if (DEBUG) {
+                printf("start is %d\n", mystart);
+                printf("end is   %d\n", myend);
+        }
 
         // iterate through our section of the array and count the threes
         for (int i = mystart; i < myend; i++) {
@@ -97,8 +100,7 @@ void *count3s(void *idx)
         // This can become quite high once you go past the 50% mark of the array size
         // but our tests will never go that far so this is a pretty good solution.
         if ((myend < SIZE) && (*index == NUMOFTHREADS - 1)) {
-
-                if (DEBUG){
+                if (DEBUG) {
                         int remain = SIZE - myend;
                         printf("Remainder: %d \n", remain);
                 }
@@ -156,9 +158,6 @@ int count3s_parallel()
         // i can pass it as a pointer in the for loop
         t_indices = (int *)(malloc(sizeof(int) * NUMOFTHREADS));
 
-        // allocate an array to store the individual results of the threads
-        // Then we can add them up afterwards
-
         // Create the threads
         for (int i = 0; i < NUMOFTHREADS; i++) {
                 t_indices[i] = i;
@@ -190,13 +189,13 @@ int count3s_parallel()
 int main(int argc, char const *argv[])
 {
         // this variable stores the time for generating the random numbers.
-        time_t t; 
+        time_t t;
 
+        // intitilize the random number with the time as the seed
         srand((unsigned)time(&t));
 
         // check if the correct arguments are used
         if (argc != 3) {
-
                 // if they are wrong barf and exit
                 printf("Not correct arguments \n");
                 printf("Usage %s <size of array> <number of threads> \n",
@@ -206,12 +205,11 @@ int main(int argc, char const *argv[])
 
         // Convert the user input to integers
         SIZE = atoi(argv[1]);
-        NUMOFTHREADS = atoi(argv[2]); 
+        NUMOFTHREADS = atoi(argv[2]);
 
-        // Set the size of the array chunks to process to the size over the 
+        // Set the size of the array chunks to process to the size over the
         // number of threads
         SEGSIZE = SIZE / NUMOFTHREADS;
-
 
         if (DEBUG) {
                 printf("number is %s \n", argv[1]);
@@ -237,7 +235,7 @@ int main(int argc, char const *argv[])
         }
 
         // Count the threes in parallel
-        int parallel_time = count3s_parallel(); 
+        int parallel_time = count3s_parallel();
 
         // initialize the count for the serial code
         int local_count = 0;
