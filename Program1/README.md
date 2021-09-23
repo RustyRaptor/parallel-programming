@@ -1,4 +1,4 @@
-# parallel-programming test
+# Program 1
 
 ## Folders index
 
