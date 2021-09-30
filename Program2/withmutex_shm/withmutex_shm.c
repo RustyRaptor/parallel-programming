@@ -16,13 +16,10 @@
 /**
 Changelog
 09/30
-- Copied code from Program 1
-- Copied and refactored shared memory code from program 1.5
-- Modified the thread to use the shared memory
-- Implemented process forks using two loops
-- added separate counts for threads and processes
-- implemented separate functions for threads and processes
-- BUGFIX: The values in the struct were not starting at 0
+- copied code from figure1_7
+- added a mutex variable to the shared memory struct
+- initialized semaphore by using code from PROGRAM 1.5
+- Added semaphore lock and unlock to relevant code
 */
 
 #define DEBUG 0 // flag to print debug values
@@ -47,6 +44,7 @@ int *A; // Pointer to our array in heap
 typedef struct {
         int count_proc;
         int count_thrd;
+        sem_t mut;
 } shmem_count;
 
 // initialize memory
@@ -92,7 +90,9 @@ void *count3s(void *idx)
                 if (A[i] == 3) {
                         if (DEBUG)
                                 printf("Found a three\n");
-                        COUNT->count_proc++;
+                        sem_wait(&COUNT->mut); // enter critical segment
+                        COUNT->count_proc++; // increment count
+                        sem_post(&COUNT->mut); // exit critical segment
                 }
         }
 
@@ -111,7 +111,9 @@ void *count3s(void *idx)
                 // iterate through the remainder of the array and count the 3s
                 for (int i = myend; i < SIZE; i++) {
                         if (A[i] == 3) {
+                                sem_wait(&COUNT->mut); // enter critical segment
                                 COUNT->count_proc++; // increment count
+                                sem_post(&COUNT->mut); // exit critical segment
                         }
                 }
 
@@ -145,7 +147,9 @@ void *count3s_thrd(void *idx)
                 if (A[i] == 3) {
                         if (DEBUG)
                                 printf("Found a three\n");
+                        sem_wait(&COUNT->mut); // enter critical segment
                         COUNT->count_thrd++;
+                        sem_post(&COUNT->mut); // exit critical segment
                 }
         }
 
@@ -164,7 +168,9 @@ void *count3s_thrd(void *idx)
                 // iterate through the remainder of the array and count the 3s
                 for (int i = myend; i < SIZE; i++) {
                         if (A[i] == 3) {
+                                sem_wait(&COUNT->mut); // enter critical segment
                                 COUNT->count_thrd++; // increment count
+                                sem_post(&COUNT->mut); // exit critical segment
                         }
                 }
 
@@ -227,7 +233,9 @@ int count3s_parallel_proc()
 
         while (childcnt > 0) {
                 int pid = wait(NULL);
-                printf("Process 1 PID %d finished\n", pid);
+                if (DEBUG) {
+                        printf("Process 1 PID %d finished\n", pid);
+                }
                 childcnt--;
         }
 
@@ -315,6 +323,9 @@ int main(int argc, char const *argv[])
                 perror("shmat failed");
                 exit(1);
         }
+
+        // initialize the semaphore to 1 with shared memory enabled
+        sem_init(&COUNT->mut, 1, 1);
 
         // this variable stores the time for generating the random numbers.
         time_t t;
