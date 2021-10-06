@@ -26,6 +26,7 @@ using the shared memory get method to allocate
 - Fixed thread so it has its own array
 - BUGFIX: Shared memory was not going away because I wasnt calling shmctl I 
 mistakenly tought shmdt was all I needed.
+        - http://www.csl.mtu.edu/cs4411.ck/www/NOTES/process/shm/shmdt.html
 - 
 */
 
@@ -369,11 +370,15 @@ int count3s_parallel_proc()
                 }
                 childcnt++;
         }
+        
         int pid;
         while (childcnt > 0) {
                 pid = wait(NULL);
-                if (DEBUG)
+
+                if (DEBUG) {
                         printf("Process 1 PID %d finished\n", pid);
+                }
+
                 childcnt--;
         }
 
