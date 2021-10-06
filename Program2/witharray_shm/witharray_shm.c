@@ -220,7 +220,10 @@ int main(int argc, char const *argv[])
                 exit(-1);
         }
 
-        shmctl(shmid, IPC_RMID, NULL);
+        if (shmctl(shmid, IPC_RMID, NULL) < 0) {
+                perror("Cant delete shared memory");
+                exit(1);
+        }
 
         return 0;
 }
@@ -370,7 +373,7 @@ int count3s_parallel_proc()
                 }
                 childcnt++;
         }
-        
+
         int pid;
         while (childcnt > 0) {
                 pid = wait(NULL);
