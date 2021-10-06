@@ -21,6 +21,11 @@ Changelog
 - Added shared memory dynamically allocated array for results
 - BUGFIX: array was not actually shared because i was using malloc instaed of 
 using the shared memory get method to allocate
+
+10/06
+- Fixed thread so it has its own array
+- BUGFIX: Shared memory was not going away because I wasnt calling shmctl I 
+mistakenly tought shmdt was all I needed.
 - 
 */
 
@@ -213,6 +218,8 @@ int main(int argc, char const *argv[])
                 perror("Cant delete the shared memory");
                 exit(-1);
         }
+
+        shmctl(shmid, IPC_RMID, NULL);
 
         return 0;
 }
