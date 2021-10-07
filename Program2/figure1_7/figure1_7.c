@@ -1,6 +1,6 @@
 // Ziad Arafat
 // Created: Aug 31 2021
-// Figure 1.7 in the textbook
+// Figure 1.7 in the textbook but with processes too. 
 
 /**
  * @brief This program will create an array of a specified size and fill it
@@ -58,18 +58,19 @@ int SIZE; // The size of the input array
 
 /**
  * @brief Iterates through a chunk of the A array and counts the number of 
- * threes by updating the COUNT variable
+ * threes by updating the shared COUNT.count_proc variable. 
  * 
  * 
- * @param index The index of the array chunks re are working with
+ * @param idx The index of the array chunks re are working with
  * @return void* returns a void pointer to work with pthread
  * 
  * @pre The global A variable must be a pointer to an array in heap containing numbers between 
  * 1 and 3. index must be a number referring to the index of the chunk we want
- * to work through starting at 0. The global COUNT variable must contain the
- * number of threes we have already counted
+ * to work through starting at 0. The global COUNT.count_proc must contain the
+ * current count of threes we found in the array and must be attached to the
+ * shared memory. 
  * 
- * @post When done the COUNT variable must be updated to have the number of 
+ * @post When done the COUNT.count_proc variable must be updated to have the number of 
  * threes found in our chunk of the array
  */
 void *count3s(void *idx)
@@ -125,6 +126,22 @@ void *count3s(void *idx)
         return (void *)0;
 }
 
+/**
+ * @brief Same as count3s but updates the count_thrd variable instead. 
+ * 
+ * 
+ * @param idx The index of the array chunks re are working with
+ * @return void* returns a void pointer to work with pthread
+ * 
+ * @pre The global A variable must be a pointer to an array in heap containing numbers between 
+ * 1 and 3. index must be a number referring to the index of the chunk we want
+ * to work through starting at 0. The global COUNT.count_thrd must contain the
+ * current count of threes we found in the array and must be attached to the
+ * shared memory. 
+ * 
+ * @post When done the COUNT.count_thrd variable must be updated to have the number of 
+ * threes found in our chunk of the array
+ */
 void *count3s_thrd(void *idx)
 {
         // if (DEBUG)
@@ -184,7 +201,7 @@ void *count3s_thrd(void *idx)
  * 
  * @return int containing the time it took
  * 
- * @pre The global COUNT variable is 0. NUMOFTHREADS is greater than 0.
+ * @pre The global COUNT.count_proc variable is 0. NUMOFTHREADS is greater than 0.
  * SEGSIZE is the size of the array divided by NUMOFTHREADS. the A variable
  * points to an array in heap. 
  * 
@@ -227,7 +244,8 @@ int count3s_parallel_proc()
 
         while (childcnt > 0) {
                 int pid = wait(NULL);
-                printf("Process 1 PID %d finished\n", pid);
+                if (DEBUG)
+                        printf("Process 1 PID %d finished\n", pid);
                 childcnt--;
         }
 
@@ -247,6 +265,12 @@ int count3s_parallel_proc()
         return j;
 }
 
+/**
+ * @brief This will run the parallel code for the threads
+ * 
+ * @return the time it took for the code to execute as an integer. 
+ * 
+ */
 int count3s_parallel()
 {
         // initialize the timer for the parallel work
@@ -297,6 +321,18 @@ int count3s_parallel()
         return j;
 }
 
+/**
+ * @brief This main function will
+ * - Initialize the shared memory
+ * - Read the command line arguments to initialze the global variables and arrays
+ * - Check for errors
+ * - run the functions to run the processes and threads. 
+ * - print out the results. 
+ * - detatch and delete the shared memory
+ * 
+ * 
+ * 
+ */
 int main(int argc, char const *argv[])
 {
         int shmid; // The shared memory id
@@ -304,7 +340,8 @@ int main(int argc, char const *argv[])
         char *shmadd_ptr; // The address of the shared memory
         shmadd_ptr = (char *)0;
 
-        if ((shmid = shmget(SHMKEY, sizeof(int), IPC_CREAT | 0666)) < 0) {
+        if ((shmid = shmget(SHMKEY, sizeof(shmem_count), IPC_CREAT | 0666)) <
+            0) {
                 perror("uh oh, shmget failed");
                 exit(1);
         }
