@@ -81,7 +81,7 @@ int SIZE; // The size of the input array
  * @post When done the COUNT variable must be updated to have the number of 
  * threes found in our chunk of the array
  */
-void *count3s(void *idx);
+void *count3s_proc(void *idx);
 
 void *count3s_thrd(void *idx);
 
@@ -110,17 +110,6 @@ int main(int argc, char const *argv[])
         char *shmadd_ptr; // The address of the shared memory
         shmadd_ptr = (char *)0;
 
-        if ((shmid = shmget(SHMKEY, sizeof(int), IPC_CREAT | 0666)) < 0) {
-                perror("uh oh, shmget failed");
-                exit(1);
-        }
-
-        // check if the shared mem attached correctly.
-        if ((results = (int *)shmat(shmid, shmadd_ptr, 0)) == (int *)-1) {
-                perror("shmat failed");
-                exit(1);
-        }
-
         // this variable stores the time for generating the random numbers.
         time_t t;
 
@@ -143,6 +132,21 @@ int main(int argc, char const *argv[])
         // Set the size of the array chunks to process to the size over the
         // number of threads
         SEGSIZE = SIZE / NUMOFTHREADS;
+
+        // ask the OS for shared memory and set it to the size of the array
+        // we want to make which is the size of an int times the number of threads.
+        // Barf if we cant get shared memory.
+        if ((shmid = shmget(SHMKEY, sizeof(int) * NUMOFTHREADS,
+                            IPC_CREAT | 0666)) < 0) {
+                perror("uh oh, shmget failed");
+                exit(1);
+        }
+
+        // check if the shared mem attached correctly.
+        if ((results = (int *)shmat(shmid, shmadd_ptr, 0)) == (int *)-1) {
+                perror("shmat failed");
+                exit(1);
+        }
 
         if (DEBUG) {
                 printf("number is %s \n", argv[1]);
@@ -167,6 +171,7 @@ int main(int argc, char const *argv[])
                 // printf("E%d \n", A[i]);
         }
 
+        // initialize counts to 0 to avoid garbage
         COUNT.count_proc = 0;
         COUNT.count_thrd = 0;
 
@@ -220,6 +225,7 @@ int main(int argc, char const *argv[])
                 exit(-1);
         }
 
+        // delete the shared memory and barf if it fails to do so
         if (shmctl(shmid, IPC_RMID, NULL) < 0) {
                 perror("Cant delete shared memory");
                 exit(1);
@@ -228,7 +234,7 @@ int main(int argc, char const *argv[])
         return 0;
 }
 
-void *count3s(void *idx)
+void *count3s_proc(void *idx)
 {
         // if (DEBUG)
         //         printf("I ran once %d\n", index);
@@ -242,7 +248,10 @@ void *count3s(void *idx)
                 printf("end is   %d\n", myend);
                 printf("Count is....... %d \n", COUNT.count_proc);
         }
+
+        // initialize the element to 0 to avoid garbage.
         results[*index] = 0;
+
         // iterate through our section of the array and count the threes
         for (int i = mystart; i < myend; i++) {
                 if (A[i] == 3) {
@@ -320,6 +329,7 @@ int count3s_parallel()
                 pthread_join(t_idents[i], NULL);
         }
 
+        // add up the results from the array.
         for (int i = 0; i < NUMOFTHREADS; i++) {
                 COUNT.count_thrd += thrd_results[i];
                 // printf("this oneeeeeee is %d \n", results[i]);
@@ -365,17 +375,26 @@ int count3s_parallel_proc()
 
         int childcnt = 0;
 
+        // Fork children until we reach the number of threads.
         while (childcnt < NUMOFTHREADS) {
+                // if we are in the child run the program
                 if ((t_idents[childcnt] = fork()) == 0) {
-                        t_indices[childcnt] = childcnt;
-                        count3s((void *)&childcnt);
-                        exit(0);
+                        t_indices[childcnt] =
+                                childcnt; // create the index to pass
+
+                        count3s_proc((
+                                void *)&childcnt); // call the function with the index
+
+                        exit(0); // exit the child before continuing.
                 }
                 childcnt++;
         }
 
-        int pid;
+        int pid; // pid of the child waited
+
+        // keep waiting on children until they are all exited
         while (childcnt > 0) {
+                // wait till a child exits then store it's pid for debugging
                 pid = wait(NULL);
 
                 if (DEBUG) {
@@ -385,6 +404,7 @@ int count3s_parallel_proc()
                 childcnt--;
         }
 
+        // add up the results from the shared mem array
         for (int i = 0; i < NUMOFTHREADS; i++) {
                 COUNT.count_proc += results[i];
                 // printf("this oneeeeeee is %d \n", results[i]);
