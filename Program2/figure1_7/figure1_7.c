@@ -1,6 +1,6 @@
 // Ziad Arafat
-// Created: Aug 31 2021
-// Figure 1.7 in the textbook
+// Created: Oct 1 2021
+// Figure 1.7 in the textbook with added process forking test and shared memory
 
 /**
  * @brief This program will create an array of a specified size and fill it
@@ -8,8 +8,7 @@
  * the number of threes in the array using a serial method and a parallel method
  * it will return the counts for each attempt as well as the running times. 
  * 
- * This version will use a single variable shared by all the threads without
- * uring a mutex. We expect it to return incorrect results
+ * This version will use shared memory and forks in addition to the threads. 
  * 
  */
 
@@ -227,7 +226,9 @@ int count3s_parallel_proc()
 
         while (childcnt > 0) {
                 int pid = wait(NULL);
-                printf("Process 1 PID %d finished\n", pid);
+                if (DEBUG) {
+                        printf("Process 1 PID %d finished\n", pid);
+                }
                 childcnt--;
         }
 
