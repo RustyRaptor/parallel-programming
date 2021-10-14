@@ -8,8 +8,8 @@
  * the number of threes in the array using a serial method and a parallel method
  * it will return the counts for each attempt as well as the running times. 
  * 
- * This version will use a single variable shared by all the threads without
- * uring a mutex. We expect it to return incorrect results
+ * This version will use a shared memory array with structs that are padded
+ * to take up 64B of memory each using a char array. 
  * 
  */
 
@@ -222,7 +222,7 @@ int main(int argc, char const *argv[])
                 // printf("E%d \n", A[i]);
         }
 
-        // Initialize the counts to 0 to avoid garbage. 
+        // Initialize the counts to 0 to avoid garbage.
         COUNT.count_proc = 0;
         COUNT.count_thrd = 0;
 
@@ -276,7 +276,7 @@ int main(int argc, char const *argv[])
                 exit(-1);
         }
 
-        // Delete the shared memory. Barf if it fails to do so. 
+        // Delete the shared memory. Barf if it fails to do so.
         if (shmctl(shmid, IPC_RMID, NULL) < 0) {
                 perror("Cant delete shared memory");
                 exit(1);
@@ -378,7 +378,7 @@ int count3s_parallel()
                 pthread_join(t_idents[i], NULL);
         }
 
-        // add up the results in the array 
+        // add up the results in the array
         for (int i = 0; i < NUMOFTHREADS; i++) {
                 COUNT.count_thrd += thrd_results[i].value;
                 // printf("this oneeeeeee is %d \n", results[i]);
