@@ -1,6 +1,6 @@
 // Ziad Arafat
 // Created: Aug 31 2021
-// Figure 1.7 in the textbook
+// Figure 1.10 with a mutex
 
 /**
  * @brief This program will create an array of a specified size and fill it
@@ -8,8 +8,9 @@
  * the number of threes in the array using a serial method and a parallel method
  * it will return the counts for each attempt as well as the running times. 
  * 
- * This version will use a single variable shared by all the threads without
- * uring a mutex. We expect it to return incorrect results
+ * This version will use a single shared memory variable and will use a mutex
+ * to protect it's access and prevent a race condition.
+ * We expect it to return incorrect results
  * 
  */
 
