@@ -1,11 +1,6 @@
 // Ziad Arafat
-<<<<<<< HEAD
 // Created: Oct 1 2021
 // Figure 1.7 in the textbook with added process forking test and shared memory
-=======
-// Created: Aug 31 2021
-// Figure 1.7 in the textbook but with processes too. 
->>>>>>> bf9e0ec509de4eee10e27dd344d6c19e20d7eceb
 
 /**
  * @brief This program will create an array of a specified size and fill it
@@ -248,14 +243,9 @@ int count3s_parallel_proc()
 
         while (childcnt > 0) {
                 int pid = wait(NULL);
-<<<<<<< HEAD
                 if (DEBUG) {
                         printf("Process 1 PID %d finished\n", pid);
                 }
-=======
-                if (DEBUG)
-                        printf("Process 1 PID %d finished\n", pid);
->>>>>>> bf9e0ec509de4eee10e27dd344d6c19e20d7eceb
                 childcnt--;
         }
 
