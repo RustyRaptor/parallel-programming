@@ -7,9 +7,11 @@
  * with random numbers between 1 and 3 inclusive. It will then try to count
  * the number of threes in the array using a serial method and a parallel method
  * it will return the counts for each attempt as well as the running times. 
+ * We will also do the same thing as the threads but with process forks. 
  * 
- * This version will use a single variable shared by all the threads without
- * uring a mutex. We expect it to return incorrect results
+ * This version will use a shared memory array with an element for each thread
+ * to update it's result. Once all threads are done we will combine all the
+ * elements into a final result. Same applies to the processes. 
  * 
  */
 
