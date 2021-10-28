@@ -7,9 +7,11 @@ times of the runs. outs.txt must contain the raw console outputs
 from statistics import mean
 par = []
 ser = []
+pro = []
 
 avgp = []
 avgs = []
+avgpr = []
 
 threads = 0
 vals = 0
@@ -22,18 +24,27 @@ with open('./outs.txt') as reader:
                 if vals == 5:
                         avgp.append(mean(par))
                         avgs.append(mean(ser))
+                        avgpr.append(mean(pro))
                         par=[]
                         ser=[]
+                        pro = []
                         vals = 0
                         threads += 1
                 word = line.split(' ')
-                if 'parallel:' in word:
-                        par.append(int(word[2]))
+                if 'process:' in word:
+                        pro.append(int(word[2]))
+                        # print(word)
+                if 'thread:' in word:
+                        par.append(int(word[3]))
+                        # print(word)
                 if 'serial:' in word:
-                        ser.append(int(word[4]))
+                        # print(word)
+                        ser.append(int(word[3]))
                         vals += 1
+                
+                        
 
-print("ser: ", avgs, "par: ", avgp, threads)
+print("ser: ", avgs, "par: ", avgp, "pro: ", avgpr, "threads: ", threads)
 
 
 
