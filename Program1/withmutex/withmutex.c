@@ -1,5 +1,5 @@
 // Ziad Arafat
-// Created: Sep 17 2021
+// Created: Sep 09 2023
 // Figure 1.9 in the textbook
 
 /**
@@ -18,16 +18,11 @@
 /**
 Changelog
 
-09/17
+09/09
 - Copied code from the figure1_7.c
 - added mutux initializer
 - added lock and unlock to the thread function
-
-
-09/19
 - added free() calls to clean up the memory when done
-
-09/21
 - fixed the way the array is split for the threads
 
 

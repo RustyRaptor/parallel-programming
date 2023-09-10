@@ -1,5 +1,5 @@
 // Ziad Arafat
-// Created: sep 18 2021
+// Created: Sep 09 2023
 // Figure 1.10 in the textbook
 
 /**
@@ -12,17 +12,12 @@
 
 /**
 Changelog
-09/17
+09/09
 - Copied code from the withmutex.c code
 - added dynamic array allocation for the results of the threads
 - removed the mutex lock and unlock
 - modified the thread to indrement the corresponding item in the array instead of global count
-
-
-09/19
 - added free() calls to clean up the memory when done
-
-09/21
 - fixed the way the array is split for the threads
 
 

@@ -1,5 +1,5 @@
 // Ziad Arafat
-// Created: Sep 19 2021
+// Created: Sep 09 2023
 // Figure 1.11 in the textbook
 
 /**
@@ -16,17 +16,12 @@
 /**
 Changelog
 
-09/18
+09/09
 - copied code from witharray.c
 - created the struct padded_int with the appropriate char padding
 - modified the results array to be an array of our padded_int
 - modified the thread to correctly access and increment the padded_ints
-- 
-
-9/19
 - added free() calls to clean up the memory when done
-
-09/21
 - fixed the way the array is split for the threads by making the size global
 
 BUGFIX: The way the array was bieng split was incorrect because unless the array

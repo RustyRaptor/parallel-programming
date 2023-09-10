@@ -1,5 +1,5 @@
 // Ziad Arafat
-// Created: Aug 31 2021
+// Created: Aug 31 2023
 // Figure 1.7 in the textbook
 
 /**
@@ -9,7 +9,7 @@
  * it will return the counts for each attempt as well as the running times. 
  * 
  * This version will use a single variable shared by all the threads without
- * uring a mutex. We expect it to return incorrect results
+ * using a mutex. We expect it to return incorrect results
  * 
  */
 
@@ -25,20 +25,11 @@ Changelog
 - tested thread creation using pthread
 - created function to generate threads to handle different sections of array
 
-09/10
-- corrected my thread code because it wasnt being joined so output was shown
-- before thread was closed.
-
-09/11
+09/09
+- corrected my thread code because it wasnt being joined so output was shown before thread was closed.
 - added timing code.
-
-09/12
 - fixed timing code. 
-
-09/19
 - added free() calls to clean up the memory when done
-
-09/21
 - fixed the way the array is split for the threads
 
 */
