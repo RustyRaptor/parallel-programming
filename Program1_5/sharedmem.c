@@ -12,18 +12,13 @@
 
 /**
  * Changelog:
- * Sep 25 2021
+ * Sep 11 2023
  * Used my old OS class code to create and manage shared memory
  * Added another part of my old OS class code to create an IPC semaphore
  * 
- * Sep 26 2021
  * BUGFIX: Semaphore was not being respected by both processes because the 
  * sem_init() call was not enabling shared memory semaphore by setting the 
  * second parameter to 1. 
- * 
- * Sep 27 2021
- * Cleaned up and documented code
- * 
  */
 
 /**
