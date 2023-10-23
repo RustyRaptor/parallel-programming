@@ -26,6 +26,16 @@ typedef struct {
         int *sync_counter;  
 } thread_data_t; 
 
+// This serves a similar function as thread_data_t but for the backsolving
+typedef struct {
+    float **matrix; 
+    int num_rows;
+    int num_cols;
+    float *solution; // stores the solution array.
+    int variable_index; // the index that the thread will work on
+} backsolve_thread_data_t;
+
+
 // Because we don't want to nest another for loop
 void update_row(
         float **matrix,
@@ -91,28 +101,59 @@ void *forward_elimination(void *arg) {
         pthread_exit(NULL);
 }
 
+// Configured to be used by pthreads
+// This will be run by each thread in the backsolve function
+void *backsolve_thread(void *arg) {
+    backsolve_thread_data_t *data = (backsolve_thread_data_t *)arg;
+    int i = data->variable_index;
+    float sum = 0;
+    for (int j = i + 1; j < data->num_cols - 1; j++) {
+        sum += data->matrix[i][j] * data->solution[j];
+    }
+    data->solution[i] = (data->matrix[i][data->num_cols - 1] - sum) / data->matrix[i][i];
+    pthread_exit(NULL);
+}
 
 // Function to do the backsolving
-float* backsolve(float **matrix, int num_rows, int num_cols)
-{
-    int i, j;
-    float *solution = malloc(num_rows * sizeof(float));
-    float sum;
+float *backsolve(float **matrix, int num_rows, int num_cols) {
 
-    if (solution == NULL) {
-        fprintf(stderr, "Failed to allocate memory for solution array\n");
-        exit(EXIT_FAILURE);
-    }
+        // intialize the array to store the solution
+        float *solution = malloc(num_rows * sizeof(float));
 
-    for (i = num_rows - 1; i >= 0; i--) {
-        sum = 0;
-        for (j = i + 1; j < num_cols - 1; j++) {
-            sum += matrix[i][j] * solution[j];
+        // intitialize an array of threads equal to the number of unknowns
+        pthread_t *threads = malloc(num_rows * sizeof(pthread_t));
+
+        // Array of the arguments for each thread function call
+        backsolve_thread_data_t *thread_data = 
+                malloc(num_rows * sizeof(backsolve_thread_data_t));
+
+        // configure the arguments for each thread and create them
+        for (int thread_id = num_rows - 1; thread_id >= 0; thread_id--) {
+                thread_data[thread_id].matrix = matrix;
+                thread_data[thread_id].num_rows = num_rows;
+                thread_data[thread_id].num_cols = num_cols;
+                thread_data[thread_id].solution = solution;
+                thread_data[thread_id].variable_index = thread_id;
+
+                pthread_create(
+                        &threads[thread_id],
+                        NULL,
+                        backsolve_thread,
+                        &thread_data[thread_id]
+                );
         }
-        solution[i] = (matrix[i][num_cols - 1] - sum) / matrix[i][i];
-    }
 
-    return solution;
+        // Wait for all the threads to complete before ending and returning
+        // the solution
+        for (int thread_id = num_rows - 1; thread_id >= 0; thread_id--) {
+                pthread_join(threads[thread_id], NULL);
+        }
+
+        // Free the allocated memory
+        free(threads);
+        free(thread_data);
+
+        return solution;
 }
 
 // Create a num_rows by num_cols matrix with random floats or predefined matrix
@@ -258,6 +299,7 @@ int main()
                         cpu_time_used
                 );
 
+                // Used to ensure the gaussian elimination is correct
                 // Capture the solution array
                 // float* solution = backsolve(matrix, num_rows, num_cols);
                 // Print the solution
@@ -272,6 +314,8 @@ int main()
 
                 // Free the solution array
                 // free(solution);
+
+
                 // No memory left behind.
                 free_matrix(matrix, num_rows);
                 free(threads);
