@@ -3,16 +3,25 @@
 #include <time.h>
 #include <omp.h>
 
-
 int count3s(int* array, int length)
 {
         int count = 0;
         int i;
 
-        #pragma omp parallel for reduction(+:count)
-        for (i = 0; i < length; i++) {
-                if (array[i] == 3) {
-                        count++;
+        #pragma omp parallel shared(array, count, length) private(i)
+        {
+                int count_p = 0;
+
+                #pragma omp for
+                for (i = 0; i < length; i++) {
+                        if (array[i] == 3) {
+                                count_p++;
+                        }
+                }
+
+                // #pragma omp critical
+                {
+                        count += count_p;
                 }
         }
 

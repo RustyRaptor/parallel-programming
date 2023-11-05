@@ -1,9 +1,8 @@
 import java.util.*;
 
-
 public class CountThrees implements Runnable {
         private static int ARRAY_LENGTH;
-        private static final int MAX_THREADS = 10;
+        private static int MAX_THREADS;
         private static final int MAX_RANGE = 100;
         private static final Random random = new Random();
         private static int count = 0;
@@ -12,14 +11,15 @@ public class CountThrees implements Runnable {
         private static Thread[] threads;
 
         public static void main(String[] args) {
-                if (args.length != 1) {
-                        System.err.println("Usage: java CountThrees <array_length>");
+                if (args.length != 2) {
+                        System.err.println("Usage: java CountThrees <array_length> <max_threads>");
                         System.exit(1);
                 }
                 try {
                     ARRAY_LENGTH = Integer.parseInt(args[0]);
+                    MAX_THREADS = Integer.parseInt(args[1]);
                 } catch (NumberFormatException e) {
-                    System.err.println("Invalid argument: " + args[0] + " is not a valid integer");
+                    System.err.println("Invalid argument: " + args[0] + " or " + args[1] + " is not a valid integer");
                     System.exit(1);
                 }
                 array = new int[ARRAY_LENGTH];
@@ -85,8 +85,10 @@ public class CountThrees implements Runnable {
                         }
                 }
 
-                synchronized (lock) {
-                        count += myCount;
-                }
+                // synchronized (lock) {
+                //         count += myCount;
+                // }
+
+                count += myCount;
         }
 }

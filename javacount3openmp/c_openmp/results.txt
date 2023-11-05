@@ -1,0 +1,77 @@
+1 threads
+count: 99991099
+Time taken: 1.503683 seconds
+count: 99995163
+Time taken: 1.503534 seconds
+count: 99995800
+Time taken: 1.504619 seconds
+count: 99978792
+Time taken: 1.504074 seconds
+count: 100003511
+Time taken: 1.504186 seconds
+2 threads
+count: 100014341
+Time taken: 0.753239 seconds
+count: 100001384
+Time taken: 0.761634 seconds
+count: 99994972
+Time taken: 0.752398 seconds
+count: 99980303
+Time taken: 0.754443 seconds
+count: 100003100
+Time taken: 0.752339 seconds
+4 threads
+count: 99997517
+Time taken: 0.432492 seconds
+count: 100002006
+Time taken: 0.380995 seconds
+count: 100013130
+Time taken: 0.684529 seconds
+count: 100001312
+Time taken: 0.433490 seconds
+count: 99992179
+Time taken: 0.427252 seconds
+8 threads
+count: 99990805
+Time taken: 0.238623 seconds
+count: 100001043
+Time taken: 0.245040 seconds
+count: 100005162
+Time taken: 0.241586 seconds
+count: 100011768
+Time taken: 0.240508 seconds
+count: 49995496
+Time taken: 0.189636 seconds
+16 threads
+count: 37498358
+Time taken: 0.097450 seconds
+count: 31255893
+Time taken: 0.096661 seconds
+count: 81246280
+Time taken: 0.128006 seconds
+count: 93751286
+Time taken: 0.125363 seconds
+count: 87496828
+Time taken: 0.125371 seconds
+32 threads
+count: 100003281
+Time taken: 0.080410 seconds
+count: 21877522
+Time taken: 0.069265 seconds
+count: 87495971
+Time taken: 0.078767 seconds
+count: 75019297
+Time taken: 0.069674 seconds
+count: 96885388
+Time taken: 0.086196 seconds
+64 threads
+count: 71864758
+Time taken: 0.085384 seconds
+count: 82811032
+Time taken: 0.087096 seconds
+count: 84369914
+Time taken: 0.064716 seconds
+count: 76551863
+Time taken: 0.061082 seconds
+count: 84397515
+Time taken: 0.062371 seconds

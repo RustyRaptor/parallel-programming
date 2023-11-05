@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>report.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="lab-report-performance-comparison-of-openmp-java-threads-and-pthreads">Lab Report: Performance Comparison of OpenMP, Java Threads, and Pthreads</h1>
+<h2 id="abstract">Abstract</h2>
+<p>OpenMP is a parallel programming model that simplifies the development of concurrent applications in C, C++, and Fortran. Unlike traditional threading models, OpenMP uses compiler directives to abstract platform-specific threading mechanisms, allowing for portable and scalable parallelism. This experiment compares the performance of OpenMP in C with Java threads and POSIX threads (pthreads) in C. The objective is to evaluate the scalability of OpenMP on a multi-processor system and its impact on program execution.</p>
+<h2 id="methods">Methods</h2>
+<h3 id="environment">Environment</h3>
+<ul>
+<li><strong>System</strong>: Dell PowerEdge R7525 on OpenSUSE Linux Leap (&quot;kaiju&quot; in the CS lab)</li>
+<li><strong>Specifications</strong>:
+<ul>
+<li>RAM: 512 GiB</li>
+<li>CPU Model: AMD EPYC 7313</li>
+<li>CPUs: 2</li>
+<li>Speed: 3.9 GHz</li>
+<li>Cores: 32 (16 per CPU)</li>
+<li>Threads: 64 (32 per CPU)</li>
+</ul>
+</li>
+</ul>
+<h3 id="procedure">Procedure</h3>
+<ul>
+<li><strong>Execution</strong>: Java and C OpenMP programs were run using a makefile with thread counts of 1, 2, 4, 8, 16, 32, and 64.</li>
+<li><strong>Timing</strong>: Programs recorded execution times, outputting to a file.</li>
+<li><strong>Analysis</strong>: Running times parsed by a Python notebook and visualized using matplotlib graphs.</li>
+<li><strong>Note</strong>: No synchronization was used, focusing on parallel performance benchmarking.</li>
+<li><strong>Comparison</strong>: C pthreads results were referenced from a previous similar experiment.</li>
+<li><strong>Code</strong> (see appendix)</li>
+</ul>
+<h2 id="results">Results</h2>
+<p>The OpenMP implementation in C demonstrated superior scalability in terms of running time and speedup, particularly evident up to 32 threads. Beyond this point, performance plateaued, likely due to inter-CPU cache sharing inefficiencies. In contrast, Java threads and pthreads showed less stable scaling, with diminishing returns observed at lower thread counts, indicating less efficient use of available processors.</p>
+<ul>
+<li>
+<p>OpenMP Runtimes
+<img src="./runtimes.png" alt="OpenMP Runtimes"></p>
+</li>
+<li>
+<p>OpenMP Speedup
+<img src="./speedup.png" alt="OpenMP Speedup"></p>
+</li>
+<li>
+<p>Java Runtimes
+<img src="./runtimes_java.png" alt="OpenMP Runtimes"></p>
+</li>
+<li>
+<p>Java Speedup
+<img src="./speedup_java.png" alt="OpenMP Speedup"></p>
+</li>
+<li>
+<p>C Pthreads Runtimes and comparison to serial</p>
+</li>
+</ul>
+<p><img src="runtimes_pthreads.png" alt="Pthreads Runtimes"></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>The experiment underscores OpenMP's efficiency in scaling across multiple processors within a single CPU, as evidenced by the performance plateau at 32 threads corresponding to the single CPU's thread capacity. The diminishing returns observed with Java threads and pthreads suggest that OpenMP's model of parallelism, with its shared memory architecture and compiler optimizations, is more adept at exploiting the computational resources for parallel tasks. This is particularly relevant in systems with a high number of cores and threads, where efficient scaling is crucial. Future work could explore the impact of using differnt algorithms and paradigms such as thread synchronization and semaphores or the use of generalized &quot;reduce/scan&quot; functions.</p>
+<h2 id="appendix">Appendix</h2>
+<h3 id="code">Code</h3>
+<h4 id="openmp">OpenMP</h4>
+<h5 id="makefile">Makefile</h5>
+<pre class="hljs"><code><div>
+<span class="hljs-section">all: count_threes</span>
+
+<span class="hljs-section">count_threes: count_threes.c</span>
+	gcc -fopenmp -o count_threes count_threes.c
+
+<span class="hljs-section">run:</span>
+	for threads in 1 2 4 8 16 32 64; do \
+		echo <span class="hljs-string">"$$threads threads"</span> &gt;&gt; results.txt; \
+		for i in {1..5}; do \
+			OMP_NUM_THREADS=$$threads ./count_threes 1000000000 &gt;&gt; results.txt; \
+		done; \
+	done
+
+	
+<span class="hljs-section">clean:</span>
+	rm -f count_threes results.txt
+
+
+</div></code></pre>
+<h5 id="program">Program</h5>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;time.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;omp.h&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">count3s</span><span class="hljs-params">(<span class="hljs-keyword">int</span>* <span class="hljs-built_in">array</span>, <span class="hljs-keyword">int</span> length)</span>
+</span>{
+        <span class="hljs-keyword">int</span> count = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">int</span> i;
+
+        <span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> omp parallel shared(array, count, length) private(i)</span>
+        {
+                <span class="hljs-keyword">int</span> count_p = <span class="hljs-number">0</span>;
+
+                <span class="hljs-meta">#<span class="hljs-meta-keyword">pragma</span> omp for</span>
+                <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; length; i++) {
+                        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">array</span>[i] == <span class="hljs-number">3</span>) {
+                                count_p++;
+                        }
+                }
+
+                <span class="hljs-comment">// #pragma omp critical</span>
+                {
+                        count += count_p;
+                }
+        }
+
+        <span class="hljs-keyword">return</span> count;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> <span class="hljs-keyword">const</span> *argv[])</span>
+</span>{
+        <span class="hljs-keyword">if</span> (argc != <span class="hljs-number">2</span>) {
+                <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Usage: %s &lt;array_size&gt;\n"</span>, argv[<span class="hljs-number">0</span>]);
+                <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+        }
+
+        <span class="hljs-keyword">int</span> length = atoi(argv[<span class="hljs-number">1</span>]);
+        <span class="hljs-keyword">if</span> (length &lt;= <span class="hljs-number">0</span>) {
+                <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Error: array size must be a positive integer\n"</span>);
+                <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+        }
+
+        <span class="hljs-keyword">int</span>* <span class="hljs-built_in">array</span> = (<span class="hljs-keyword">int</span>*) <span class="hljs-built_in">malloc</span>(length * <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">int</span>));
+        <span class="hljs-keyword">int</span> i;
+
+        srand(time(<span class="hljs-literal">NULL</span>));
+        <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; length; i++) {
+                <span class="hljs-built_in">array</span>[i] = rand() % <span class="hljs-number">10</span> + <span class="hljs-number">1</span>;
+        }
+
+        <span class="hljs-keyword">double</span> start_time, end_time;
+
+        start_time = omp_get_wtime();
+        <span class="hljs-keyword">int</span> count = count3s(<span class="hljs-built_in">array</span>, length);
+        end_time = omp_get_wtime();
+
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"count: %d\n"</span>, count);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Time taken: %f seconds\n"</span>, end_time - start_time);
+
+        <span class="hljs-built_in">free</span>(<span class="hljs-built_in">array</span>);
+        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</div></code></pre>
+<h4 id="java-threads">Java Threads</h4>
+<h5 id="makefile">Makefile</h5>
+<pre class="hljs"><code><div><span class="hljs-section">all: CountThrees.class</span>
+
+<span class="hljs-section">CountThrees.class:</span>
+	javac CountThrees.java
+<span class="hljs-section">run:	</span>
+	
+	for threads in 1 2 4 8 16 32 64; do \
+		echo <span class="hljs-string">"$$threads threads"</span> &gt;&gt; results.txt; \
+		for i in {1..5}; do \
+			java CountThrees 1000000000 $$threads &gt;&gt; results.txt; \
+		done \
+	done
+
+
+<span class="hljs-section">clean:</span>
+	rm -f CountThrees.class results.txt
+</div></code></pre>
+<h5 id="program">Program</h5>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> java.util.*;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CountThrees</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Runnable</span> </span>{
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> ARRAY_LENGTH;
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> MAX_THREADS;
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> MAX_RANGE = <span class="hljs-number">100</span>;
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Random random = <span class="hljs-keyword">new</span> Random();
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> count = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Object lock = <span class="hljs-keyword">new</span> Object();
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span>[] array;
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Thread[] threads;
+
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>{
+                <span class="hljs-keyword">if</span> (args.length != <span class="hljs-number">2</span>) {
+                        System.err.println(<span class="hljs-string">"Usage: java CountThrees &lt;array_length&gt; &lt;max_threads&gt;"</span>);
+                        System.exit(<span class="hljs-number">1</span>);
+                }
+                <span class="hljs-keyword">try</span> {
+                    ARRAY_LENGTH = Integer.parseInt(args[<span class="hljs-number">0</span>]);
+                    MAX_THREADS = Integer.parseInt(args[<span class="hljs-number">1</span>]);
+                } <span class="hljs-keyword">catch</span> (NumberFormatException e) {
+                    System.err.println(<span class="hljs-string">"Invalid argument: "</span> + args[<span class="hljs-number">0</span>] + <span class="hljs-string">" or "</span> + args[<span class="hljs-number">1</span>] + <span class="hljs-string">" is not a valid integer"</span>);
+                    System.exit(<span class="hljs-number">1</span>);
+                }
+                array = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[ARRAY_LENGTH];
+
+                <span class="hljs-comment">// Initialize the elements in the array</span>
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; array.length; i++) {
+                        array[i] = random.nextInt(MAX_RANGE);
+                }
+                <span class="hljs-keyword">long</span> startTime = System.nanoTime();
+
+                <span class="hljs-comment">// Create the threads</span>
+                CountThrees[] counters = <span class="hljs-keyword">new</span> CountThrees[MAX_THREADS];
+                <span class="hljs-keyword">int</span> lengthPerThread = ARRAY_LENGTH / MAX_THREADS;
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; counters.length; i++) {
+                        counters[i] = <span class="hljs-keyword">new</span> CountThrees(
+                                i * lengthPerThread, 
+                                lengthPerThread
+                        );
+                }
+
+                <span class="hljs-comment">// Run the threads</span>
+                threads = <span class="hljs-keyword">new</span> Thread[MAX_THREADS];
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; counters.length; i++) {
+                        threads[i] = <span class="hljs-keyword">new</span> Thread(counters[i]);
+                        threads[i].start();
+                }
+
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; counters.length; i++) {
+                        <span class="hljs-keyword">try</span> {
+                                threads[i].join();
+                        } <span class="hljs-keyword">catch</span> (InterruptedException e) {
+                                <span class="hljs-comment">// Do nothing</span>
+                        }
+                }
+                <span class="hljs-keyword">long</span> endTime = System.nanoTime();
+                <span class="hljs-comment">// Print the number of threes</span>
+                System.out.println(<span class="hljs-string">"Number of threes: "</span> + count);
+
+                <span class="hljs-comment">// compute the elapsed time in nanoseconds</span>
+                <span class="hljs-keyword">long</span> duration = (endTime - startTime);  
+
+                <span class="hljs-comment">// convert to seconds</span>
+                <span class="hljs-keyword">double</span> seconds = (<span class="hljs-keyword">double</span>)duration / <span class="hljs-number">1_000_000_000.0</span>; 
+
+                System.out.println(<span class="hljs-string">"Time taken: "</span> + seconds + <span class="hljs-string">" seconds"</span>);
+        }
+
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> startIndex;
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> elements;
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> myCount = <span class="hljs-number">0</span>;
+
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">CountThrees</span><span class="hljs-params">(<span class="hljs-keyword">int</span> start, <span class="hljs-keyword">int</span> elem)</span> </span>{
+                startIndex = start;
+                elements = elem;
+        }
+
+        <span class="hljs-comment">// Overload of run method in the Thread class</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>{
+                <span class="hljs-comment">// Count the number of threes</span>
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; elements; i++) {
+                        <span class="hljs-keyword">if</span> (array[startIndex + i] == <span class="hljs-number">3</span>) {
+                                myCount++;
+                        }
+                }
+
+                <span class="hljs-comment">// synchronized (lock) {</span>
+                <span class="hljs-comment">//         count += myCount;</span>
+                <span class="hljs-comment">// }</span>
+
+                count += myCount;
+        }
+}
+</div></code></pre>
+
+</body>
+</html>
