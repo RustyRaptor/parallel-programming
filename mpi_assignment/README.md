@@ -41,11 +41,13 @@
    1. Generate a local ssh key
       1. `ssh-keygen`
          1. Press enter for default options
-   2. Copy the ssh key to each node you want to use
-      1. `ssh-copy-id yourusername@nodename.cs.nmsu.edu`
-      2. example
-         1. `ssh-copy-id zarafat@kaiju.cs.nmsu.edu`
-   3. repeat step 2 for each node (no need to regenerate the key each time)
+   2. Copy the ssh key to one of the nodes you want to use
+      1. `ssh-copy-id yourusername@yournode.cs.nmsu.edu`
+      2. You only need to copy it to one node because the CS machines share the same files so copying it to one node will allow passwordless login on all of them.
+   5. Test the ssh connection to each node
+      1. for each node in your hostfile run this command
+         1. `ssh yourusername@nodename.cs.nmsu.edu`
+      2. each one should work without a password. 
 
 #### Create your "hosts" file
 1. Create a plain text file in your code directory
