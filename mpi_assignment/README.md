@@ -47,7 +47,8 @@
    5. Test the ssh connection to each node
       1. for each node in your hostfile run this command
          1. `ssh yourusername@nodename.cs.nmsu.edu`
-      2. each one should work without a password. 
+      2. each one should work without a password.
+      3. This step is crucial because ssh wants you to confirm you want each hostname in your list of known hosts.
 
 #### Create your "hosts" file
 1. Create a plain text file in your code directory
