@@ -2,4 +2,3 @@ kraken
 gojiro
 tsunami
 kaiju
-gray
