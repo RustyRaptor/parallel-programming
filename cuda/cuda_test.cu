@@ -36,6 +36,15 @@ __global__ void reduce(int *g_idata, int *g_odata)
                 g_odata[blockIdx.x] = sdata[0];
 }
 
+__global__ void vector_add(int *a, int *b, int *c, int N)
+{
+        int i = blockIdx.x * blockDim.x + threadIdx.x;
+        if (i < N)
+        {
+                c[i] = a[i] + b[i];
+        }
+}
+
 int main(int argc, char const *argv[])
 {
         // size of the vector
