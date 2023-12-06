@@ -20,37 +20,32 @@ def parse_performance_metrics(line):
                 metric, value = match.groups()
                 return metric, float(value)
         return None
-
 def run_program(command, folder='.'):
         env = os.environ.copy()
-        command = command.split()
-        if 'OMP_NUM_THREADS' in command[0]:
-                omp_threads, num_threads = command[0].split('=')
+        command_parts = command.split()
+        if 'OMP_NUM_THREADS' in command_parts[0]:
+                omp_threads, num_threads = command_parts[0].split('=')
                 env[omp_threads] = num_threads
-                command = command[1:]
-
-        # Change directory to program's folder
+                command_parts = command_parts[1:]
+        
         initial_dir = os.getcwd()
         os.chdir(f'{initial_dir}/{folder.lstrip("./")}')
-
-        # Execute the command
-        result = subprocess.run(
-                command, 
-                stdout=subprocess.PIPE, 
-                stderr=subprocess.STDOUT,
-                text=True,
-                env=env
-        )
         
         execution_times = []
-        for line in result.stdout.split('\n'):
-                parsed_metric = parse_performance_metrics(line)
-                if parsed_metric and parsed_metric[0] == 'executionTime':
-                        execution_times.append(parsed_metric[1])
+        for _ in range(5):  # Run the program 5 times
+                result = subprocess.run(command_parts, stdout=subprocess.PIPE, 
+                                        stderr=subprocess.STDOUT, text=True, env=env)
+                for line in result.stdout.split('\n'):
+                        parsed_metric = parse_performance_metrics(line)
+                        if parsed_metric and parsed_metric[0] == 'executionTime':
+                                execution_times.append(parsed_metric[1])
 
         # Return to initial directory
         os.chdir(initial_dir)
-        return execution_times
+
+        # Return the average time
+        return sum(execution_times) / len(execution_times) if execution_times else 0
+
 
 def build_commands():
         array_sizes = [10000, 100000, 1000000, 10000000]
@@ -95,8 +90,7 @@ commands = build_commands()
 results = []
 
 for cmd, size, count, program, folder in commands:
-        execution_times = run_program(cmd, folder=folder)
-        for time in execution_times:
-                results.append([program, size, count, time])
+        average_time = run_program(cmd, folder=folder)
+        results.append([program, size, count, average_time])
 
 export_to_csv(results, 'performance_metrics.csv')
