@@ -55,6 +55,10 @@ int* generate_array(int size) {
         return array;
 }
 
+void printPerformanceMetrics(const char* metric, double value) {
+        printf("\"%s\": %f\n", metric, value);
+}
+
 /**
  * @brief Function to count the number of threes in an array
  * @param array The array to be counted
@@ -165,7 +169,7 @@ int main(int argc, char **argv) {
 
         free(array);
 
-        printf("parallel time: %ld\n", parallel_time);
+        printPerformanceMetrics("executionTime", parallel_time);
 
         return 0;
 }

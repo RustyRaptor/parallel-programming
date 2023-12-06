@@ -35,6 +35,10 @@ int *generate_array(int size, int world_rank) {
     }
 }
 
+void printPerformanceMetrics(const char* metric, double value) {
+    printf("\"%s\": %f\n", metric, value);
+}
+
 int main(int argc, char **argv) {
         
                 
@@ -48,6 +52,7 @@ int main(int argc, char **argv) {
 
         // record start time
         double start_time, end_time;
+        double elapsed_time;
         if (world_rank == 0) {
                 start_time = MPI_Wtime();
         }
@@ -110,11 +115,13 @@ int main(int argc, char **argv) {
 
         // record end time
         if (world_rank == 0) {
-        end_time = MPI_Wtime();
-                printf(
-                        "Total computation time: %f seconds\n",
-                        end_time - start_time
-                );
+                end_time = MPI_Wtime();
+                elapsed_time = end_time - start_time;
+                
+                // convert seconds to nanoseconds
+                elapsed_time *= 1000000000;
+
+                printPerformanceMetrics("executionTime", elapsed_time);
         }
         // Finalize the MPI environment
         MPI_Finalize();

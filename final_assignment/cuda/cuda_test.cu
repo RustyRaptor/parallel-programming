@@ -1,6 +1,8 @@
-// example cuda program
-//
-// Created by Ziad Arafat
+// cuda program to count the number of threes in an array.
+// Uses all the threads in a block to count the number of threes in a block.
+
+#define NUM_BLOCKS 1
+#define NUM_THREADS 1024
 
 #include <iostream>
 #include <cuda.h>
@@ -9,111 +11,122 @@
 #include <stdlib.h>
 
 using namespace std;
-
-// kernel function to add up the elements of a vector using reduce algorithm
-__global__ void reduce(int *g_idata, int *g_odata)
+void printPerformanceMetrics(const std::string& metric, double value) {
+    std::cout << "\"" << metric << "\": " << value << std::endl;
+}
+__global__ void count_threes(int *data, int *count, int N)
 {
-        extern __shared__ int sdata[];
+        int i = blockIdx.x * blockDim.x + threadIdx.x;
+        int local_count = 0;
 
-        // each thread loads one element from global to shared mem
-        unsigned int tid = threadIdx.x;
-        unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
-        sdata[tid] = g_idata[i];
+        if (i < N) {
+                local_count = (data[i] == 3) ? 1 : 0;
+        }
+
+        extern __shared__ int sdata[];
+        sdata[threadIdx.x] = local_count;
         __syncthreads();
 
-        // do reduction in shared mem
-        for (unsigned int s = 1; s < blockDim.x; s *= 2)
-        {
-                if (tid % (2 * s) == 0)
-                {
-                        sdata[tid] += sdata[tid + s];
+        // Perform reduction in shared memory
+        for (unsigned int s = 1; s < blockDim.x; s *= 2) {
+                int index = 2 * s * threadIdx.x;
+                if (index < blockDim.x) {
+                        sdata[index] += sdata[index + s];
                 }
                 __syncthreads();
         }
 
-        // write result for this block to global mem
-        if (tid == 0)
-                g_odata[blockIdx.x] = sdata[0];
-}
-
-__global__ void vector_add(int *a, int *b, int *c, int N)
-{
-        int i = blockIdx.x * blockDim.x + threadIdx.x;
-        if (i < N)
-        {
-                c[i] = a[i] + b[i];
+        // Write result for this block to global memory
+        if (threadIdx.x == 0) {
+                count[blockIdx.x] = sdata[0];
         }
 }
 
 int main(int argc, char const *argv[])
 {
-        // size of the vector
-        int N = pow(2, 11);
-
-        // size of the vector in bytes
-        size_t bytes = N * sizeof(int);
-
-        // host vectors
-        int *h_a, *h_b;
-
-        // allocate memory for host vectors
-        h_a = (int *)malloc(bytes);
-        h_b = (int *)malloc(bytes);
-
-        // initialize host vectors
-        for (int i = 0; i < N; i++)
+        // Parse command line arguments
+        if (argc != 2)
         {
-                // generate a random number
-                srand(1); // set the seed to current time
-                h_a[i] = rand() % 1000;
-                // cout << h_a[i] << " ";
+                cout << "Usage: " << argv[0] << " N" << endl;
+                return 1;
+        }
+        int N = atoi(argv[1]);
+
+        size_t free_available_gpu_memory, total_available_gpu_memory;
+
+        cudaError_t err = cudaMemGetInfo(
+                &free_available_gpu_memory,
+                &total_available_gpu_memory
+        );
+
+        if (err != cudaSuccess ) {
+                cout << cudaGetErrorString(err) 
+                        << " in " << __FILE__ << " at line " 
+                        << __LINE__ << endl;
         }
 
-        // device vectors
+        // create cuda events for timing
+        cudaEvent_t start, stop;
+        cudaEventCreate(&start);
+        cudaEventCreate(&stop);
+
+        // Allocate host memory
+        int *h_a, *h_b, *h_c;
+        h_a = new int[N];
+        h_b = new int[N];
+        h_c = new int[N];
+
+        // Initialize host arrays
+        for (int i = 0; i < N; i++)
+        {
+                h_a[i] = rand() % 4;
+        }
+
+        // Allocate device memory
         int *d_a, *d_b;
+        cudaMalloc((void **)&d_a, N * sizeof(int));
+        cudaMalloc((void **)&d_b, N * sizeof(int));
 
-        // allocate memory for device vectors
-        cudaMalloc(&d_a, bytes);
-        cudaMalloc(&d_b, bytes);
+        // Copy data from host to device memory
+        cudaMemcpy(d_a, h_a, N * sizeof(int), cudaMemcpyHostToDevice);
 
-        // copy data from host to device
-        cudaMemcpy(d_a, h_a, bytes, cudaMemcpyHostToDevice);
 
-        // number of threads per block
-        int NUM_THREADS = 1024;
+        // record start time
+        cudaEventRecord(start);
 
-        // number of blocks
-        int NUM_BLOCKS = (N + NUM_THREADS - 1) / NUM_THREADS;
+        // Launch kernel
+        int total_count = 0;
 
-        // number of bytes for shared memory
-        int SHMEM_BYTES = NUM_THREADS * sizeof(int);
-
-        // execute kernel
-        reduce<<<NUM_BLOCKS, NUM_THREADS, SHMEM_BYTES>>>(d_a, d_b);
-
-        // copy data from device to host
-        cudaMemcpy(h_b, d_b, bytes, cudaMemcpyDeviceToHost);
-
-        // print the result
-        cout << "The sum is " << h_b[0] << endl;
-
-        // test if result is correct
-        int sum = 0;
-        for (int i = 0; i < N; i++)
-        {
-                sum += h_a[i];
+        for (int i = 0; i < NUM_BLOCKS; i++) {
+                count_threes<<<NUM_BLOCKS, NUM_THREADS, NUM_THREADS * sizeof(int)>>>(d_a, d_b, N);
+                cudaMemcpy(h_b, d_b, N * sizeof(int), cudaMemcpyDeviceToHost);
+                total_count += h_b[i];
         }
-        cout << "The sum is " << sum << endl;
 
-        // free device memory
+        // record end time
+        cudaEventRecord(stop);
+
+        // wait for the stop event to complete
+        cudaEventSynchronize(stop);
+
+        // calculate elapsed time
+        float milliseconds = 0;
+        cudaEventElapsedTime(&milliseconds, start, stop);
+
+        // destroy cuda events
+        cudaEventDestroy(start);
+        cudaEventDestroy(stop);
+
+        // free memory
         cudaFree(d_a);
         cudaFree(d_b);
+        delete[] h_a;
+        delete[] h_b;
+        delete[] h_c;
+        
+        // convert milliseconds to nano seconds
+        milliseconds *= 1000000;
 
-        // free host memory
-        free(h_a);
-        free(h_b);
-
-
-
-        return 0;
+        cout << "Total number of threes in the array: " << total_count << endl;
+        printPerformanceMetrics("executionTime", milliseconds);
 }

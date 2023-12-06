@@ -40,3 +40,45 @@ count: 994, Time taken: 0.000740
 count: 994, Time taken: 0.000732
 count: 994, Time taken: 0.000727
 count: 994, Time taken: 0.000860
+1 threads
+count: 3311, "elapsed_time": 51627.052017
+count: 3311, "elapsed_time": 38612.983190
+count: 3311, "elapsed_time": 37320.016418
+count: 3311, "elapsed_time": 35726.989154
+count: 3311, "elapsed_time": 33542.979509
+2 threads
+count: 3311, "elapsed_time": 102031.975985
+count: 3311, "elapsed_time": 69361.005444
+count: 3311, "elapsed_time": 56096.003391
+count: 3311, "elapsed_time": 52599.003538
+count: 3311, "elapsed_time": 55513.984989
+4 threads
+count: 3311, "elapsed_time": 161484.000273
+count: 3311, "elapsed_time": 145333.993714
+count: 3311, "elapsed_time": 406976.032536
+count: 3414, "elapsed_time": 134133.035317
+count: 3414, "elapsed_time": 164358.993061
+8 threads
+count: 3414, "elapsed_time": 443905.009888
+count: 3414, "elapsed_time": 210986.007005
+count: 3414, "elapsed_time": 259828.986600
+count: 3414, "elapsed_time": 231715.966947
+count: 3414, "elapsed_time": 214643.951040
+16 threads
+count: 3414, "elapsed_time": 431702.006608
+count: 3414, "elapsed_time": 423746.998422
+count: 3414, "elapsed_time": 395253.009629
+count: 3414, "elapsed_time": 669698.987622
+count: 3414, "elapsed_time": 400123.011786
+32 threads
+count: 3414, "elapsed_time": 807899.981737
+count: 3414, "elapsed_time": 789654.965047
+count: 3414, "elapsed_time": 877259.997651
+count: 3414, "elapsed_time": 804393.028375
+count: 3414, "elapsed_time": 858054.030687
+64 threads
+count: 3414, "elapsed_time": 2202283.008955
+count: 3414, "elapsed_time": 1627230.027225
+count: 3414, "elapsed_time": 1570594.031364
+count: 3414, "elapsed_time": 1586124.009918
+count: 3414, "elapsed_time": 2054583.979771

@@ -39,6 +39,9 @@ int* generate_array(int size) {
 
         return array;
 }
+void printPerformanceMetrics(const char* metric, double value) {
+        printf("\"%s\": %.6f\n", metric, value); // Display 6 decimal places
+}
 
 int main(int argc, char const *argv[])
 {
@@ -65,7 +68,14 @@ int main(int argc, char const *argv[])
         end_time = omp_get_wtime();
 
         printf("count: %d, ", count);
-        printf("Time taken: %f\n", end_time - start_time);
+        
+        // print performance metrics
+        double elapsed_time = end_time - start_time;
+
+        // convert seconds to nanoseconds
+        elapsed_time *= 1000000000;
+        
+        printPerformanceMetrics("elapsed_time", elapsed_time);
 
         free(array);
         return 0;

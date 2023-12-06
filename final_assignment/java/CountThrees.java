@@ -61,10 +61,8 @@ public class CountThrees implements Runnable {
                 // compute the elapsed time in nanoseconds
                 long duration = (endTime - startTime);  
 
-                // convert to seconds
-                double seconds = (double)duration / 1_000_000_000.0; 
 
-                System.out.println("Time taken: " + seconds + " seconds");
+                printPerformanceMetrics("executionTime", duration);
         }
 
         private int startIndex;
@@ -75,6 +73,16 @@ public class CountThrees implements Runnable {
                 startIndex = start;
                 elements = elem;
         }
+
+        
+        public static void printPerformanceMetrics(
+                String metric,
+                double value
+                )
+        {
+                System.out.printf("\"%s\": %f%n", metric, value);
+        }
+            
 
         // Overload of run method in the Thread class
         public void run() {
