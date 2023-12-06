@@ -67,7 +67,7 @@ int main(int argc, char const *argv[])
         int count = count3s(array, length);
         end_time = omp_get_wtime();
 
-        printf("count: %d, ", count);
+        // printf("count: %d, ", count);
         
         // print performance metrics
         double elapsed_time = end_time - start_time;
@@ -75,7 +75,7 @@ int main(int argc, char const *argv[])
         // convert seconds to nanoseconds
         elapsed_time *= 1000000000;
         
-        printPerformanceMetrics("elapsed_time", elapsed_time);
+        printPerformanceMetrics("executionTime", elapsed_time);
 
         free(array);
         return 0;

@@ -35,6 +35,7 @@ def run_program(command, folder='.'):
         for _ in range(5):  # Run the program 5 times
                 result = subprocess.run(command_parts, stdout=subprocess.PIPE, 
                                         stderr=subprocess.STDOUT, text=True, env=env)
+                print(result.stdout)
                 for line in result.stdout.split('\n'):
                         parsed_metric = parse_performance_metrics(line)
                         if parsed_metric and parsed_metric[0] == 'executionTime':
@@ -43,8 +44,8 @@ def run_program(command, folder='.'):
         # Return to initial directory
         os.chdir(initial_dir)
 
-        # Return the average time
-        return sum(execution_times) / len(execution_times) if execution_times else 0
+        # Return the times
+        return execution_times
 
 
 def build_commands():
@@ -89,8 +90,18 @@ def export_to_csv(results, filename):
 commands = build_commands()
 results = []
 
+total_commands = len(commands)
+current_command = 0
+
 for cmd, size, count, program, folder in commands:
-        average_time = run_program(cmd, folder=folder)
-        results.append([program, size, count, average_time])
+        print(f'Running {program} with array size {size} and {count} threads')
+        current_command += 1
+        print(f'Progress: {current_command}/{total_commands}')
+        times = run_program(cmd, folder=folder)
+        print(f'Execution times: {times}\n')
+        print(f'Average execution time: {sum(times)/len(times)}\n')
+        
+        for time in times:
+                results.append([program, size, count, time])
 
 export_to_csv(results, 'performance_metrics.csv')

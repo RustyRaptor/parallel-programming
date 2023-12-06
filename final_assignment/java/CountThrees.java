@@ -56,7 +56,7 @@ public class CountThrees implements Runnable {
                 }
                 long endTime = System.nanoTime();
                 // Print the number of threes
-                System.out.println("Number of threes: " + count);
+                // System.out.println("Number of threes: " + count);
 
                 // compute the elapsed time in nanoseconds
                 long duration = (endTime - startTime);  

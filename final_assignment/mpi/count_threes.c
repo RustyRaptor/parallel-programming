@@ -104,7 +104,7 @@ int main(int argc, char **argv) {
 
         // Master process prints the total count
         if (world_rank == 0) {
-                printf("Total count of threes: %d\n", total_count);
+                // printf("Total count of threes: %d\n", total_count);
         }
 
         // Clean up

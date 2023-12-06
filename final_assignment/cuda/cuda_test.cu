@@ -127,6 +127,6 @@ int main(int argc, char const *argv[])
         // convert milliseconds to nano seconds
         milliseconds *= 1000000;
 
-        cout << "Total number of threes in the array: " << total_count << endl;
+        // cout << "Total number of threes in the array: " << total_count << endl;
         printPerformanceMetrics("executionTime", milliseconds);
 }
