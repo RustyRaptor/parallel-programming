@@ -1,0 +1,77 @@
+1 threads
+Number of threes: 9997807
+Time taken: 0.359876473 seconds
+Number of threes: 9998567
+Time taken: 0.361032238 seconds
+Number of threes: 9996883
+Time taken: 0.360004483 seconds
+Number of threes: 9996455
+Time taken: 0.359855544 seconds
+Number of threes: 9998718
+Time taken: 0.359787787 seconds
+2 threads
+Number of threes: 9998562
+Time taken: 0.373749715 seconds
+Number of threes: 10004232
+Time taken: 0.447702756 seconds
+Number of threes: 10000537
+Time taken: 0.464235889 seconds
+Number of threes: 9997416
+Time taken: 0.372059609 seconds
+Number of threes: 9996787
+Time taken: 0.371326817 seconds
+4 threads
+Number of threes: 10004804
+Time taken: 0.222983097 seconds
+Number of threes: 9997107
+Time taken: 0.216992067 seconds
+Number of threes: 10000709
+Time taken: 0.21719135 seconds
+Number of threes: 9996199
+Time taken: 0.21907073 seconds
+Number of threes: 10008067
+Time taken: 0.22178881 seconds
+8 threads
+Number of threes: 10006502
+Time taken: 0.167658194 seconds
+Number of threes: 10004407
+Time taken: 0.165304926 seconds
+Number of threes: 9997402
+Time taken: 0.163078056 seconds
+Number of threes: 9999915
+Time taken: 0.162809502 seconds
+Number of threes: 9999852
+Time taken: 0.165746493 seconds
+16 threads
+Number of threes: 9997128
+Time taken: 0.178607489 seconds
+Number of threes: 9995240
+Time taken: 0.172914077 seconds
+Number of threes: 10001920
+Time taken: 0.174337312 seconds
+Number of threes: 10000932
+Time taken: 0.176571896 seconds
+Number of threes: 10005193
+Time taken: 0.175561715 seconds
+32 threads
+Number of threes: 9998869
+Time taken: 0.190420432 seconds
+Number of threes: 10000228
+Time taken: 0.190276435 seconds
+Number of threes: 9372724
+Time taken: 0.178388981 seconds
+Number of threes: 10000496
+Time taken: 0.180038991 seconds
+Number of threes: 9997442
+Time taken: 0.149067537 seconds
+64 threads
+Number of threes: 9687065
+Time taken: 0.160374063 seconds
+Number of threes: 9996783
+Time taken: 0.229213367 seconds
+Number of threes: 9997292
+Time taken: 0.282740373 seconds
+Number of threes: 9530897
+Time taken: 0.19328029 seconds
+Number of threes: 9689583
+Time taken: 0.199149752 seconds 

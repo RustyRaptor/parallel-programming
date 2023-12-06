@@ -1,0 +1,42 @@
+1 threads
+count: 994, Time taken: 0.000030
+count: 994, Time taken: 0.000026
+count: 994, Time taken: 0.000028
+count: 994, Time taken: 0.000028
+count: 994, Time taken: 0.000054
+2 threads
+count: 994, Time taken: 0.000057
+count: 994, Time taken: 0.000055
+count: 994, Time taken: 0.000061
+count: 994, Time taken: 0.000063
+count: 994, Time taken: 0.000061
+4 threads
+count: 994, Time taken: 0.000080
+count: 994, Time taken: 0.000083
+count: 994, Time taken: 0.000082
+count: 994, Time taken: 0.000076
+count: 994, Time taken: 0.000081
+8 threads
+count: 994, Time taken: 0.000111
+count: 994, Time taken: 0.000120
+count: 994, Time taken: 0.000112
+count: 994, Time taken: 0.000132
+count: 994, Time taken: 0.000140
+16 threads
+count: 994, Time taken: 0.000183
+count: 994, Time taken: 0.000182
+count: 994, Time taken: 0.000199
+count: 994, Time taken: 0.000183
+count: 994, Time taken: 0.000189
+32 threads
+count: 994, Time taken: 0.000495
+count: 994, Time taken: 0.000435
+count: 994, Time taken: 0.000462
+count: 994, Time taken: 0.000368
+count: 994, Time taken: 0.000407
+64 threads
+count: 994, Time taken: 0.000711
+count: 994, Time taken: 0.000740
+count: 994, Time taken: 0.000732
+count: 994, Time taken: 0.000727
+count: 994, Time taken: 0.000860
